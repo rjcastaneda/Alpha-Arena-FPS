@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+ *  Script placed on the HealthBar Object in the Player HUD.
+ *    
+ */
+
 public class HealthBarHUD : MonoBehaviour
 {
     //Health Bar Values
@@ -14,6 +19,9 @@ public class HealthBarHUD : MonoBehaviour
     void Start()
     {
         HealthSlider = this.gameObject.GetComponent<Slider>();
+
+        //Need to integrate PlayerData with health hud.
+
         //MaxHealth = PlayerData.maxHealth;
         //CurrentHealth = PlayerData.currentHealth;
     }

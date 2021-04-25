@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Player_Movement : MonoBehaviour
@@ -170,5 +171,146 @@ public class Player_Movement : MonoBehaviour
         // Apply forces to the player
         rb.AddForce(orientation.transform.forward * y * moveSpeed * Time.deltaTime * multiplier * multiplierV);
         rb.AddForce(orientation.transform.right * x * moveSpeed * Time.deltaTime * multiplier);
+    }
+
+    private void Jump()
+    {
+        if (grounded && readyToJump)
+        {
+            // Cannot temporarily jump
+            readyToJump = false;
+
+            // Apply forces to jump
+            rb.AddForce(Vector2.up * jumpForce * 1.5f);
+            rb.AddForce(normalVector * jumpForce * 0.5f);
+
+            // Handles jumping while falling
+            // Used to reset your y-velocity or else jumps will feel like they are trying to cancel gravity's downward force
+            Vector3 magnitude = rb.velocity;
+            if (rb.velocity.y < 0.5f)
+            {
+                rb.velocity = new Vector3(magnitude.x, 0, magnitude.y);
+            }
+            else if (rb.velocity.y > 0)
+            {
+                rb.velocity = new Vector3(magnitude.x, magnitude.y / 2, magnitude.z);
+            }
+
+            // Begin jump cooldown
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
+    }
+
+    private void ResetJump()
+    {
+        readyToJump = true;
+    }
+
+    private float desiredX;
+    private void Look()
+    {
+        // Initialize mouse variables
+        float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime * sensMultiplier;
+        float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime * sensMultiplier;
+
+        // Find player's current look position
+        Vector3 rotation = playerCamera.transform.localRotation.eulerAngles;
+        desiredX = rotation.y + mouseX;
+
+        // Handles mouse rotation
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        // Apply the rotations
+        playerCamera.transform.localRotation = Quaternion.Euler(xRotation, desiredX, 0);
+        orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
+    }
+
+    private void CounterMovement(float x, float y, Vector2 magnitude)
+    {
+        // Jumping handled elsewhere
+        if (!grounded || jumping) return;
+
+        // Slows down the player when crouching
+        if (crouching)
+        {
+            rb.AddForce(moveSpeed * Time.deltaTime * -rb.velocity.normalized * slideCounterMovement);
+        }
+
+        // Counter movement
+        if (Math.Abs(magnitude.x) > threshold && Math.Abs(x) < 0.05f || (magnitude.x < -threshold && x > 0) || (magnitude.x > threshold && x < 0))
+        {
+            rb.AddForce(moveSpeed * orientation.transform.right * Time.deltaTime * -magnitude.x * counterMovement);
+        }
+        if (Math.Abs(magnitude.y) > threshold && Math.Abs(y) < 0.05f || (magnitude.y < -threshold && y > 0) || (magnitude.y > threshold && y < 0))
+        {
+            rb.AddForce(moveSpeed * orientation.transform.forward * Time.deltaTime * -magnitude.y * counterMovement);
+        }
+
+        // Inhibits "Diagonal" speed boosts
+        if (Mathf.Sqrt((Mathf.Pow(rb.velocity.x, 2) + Mathf.Pow(rb.velocity.z, 2))) > maxSpeed)
+        {
+            float fallSpeed = rb.velocity.y;
+            Vector3 normal = rb.velocity.normalized * maxSpeed;
+            rb.velocity = new Vector3(normal.x, fallSpeed, normal.z);
+        }
+    }
+
+    // Find velocity relative to where the player is moving their camera
+    // Used for creating cool movement like B-Hopping and Air Strafes
+    private Vector2 FindVelocityRelativeToLook()
+    {
+        float lookAngle = orientation.transform.eulerAngles.y;
+        float moveAngle = Mathf.Atan2(rb.velocity.x, rb.velocity.z) * Mathf.Rad2Deg;
+
+        float u = Mathf.DeltaAngle(lookAngle, moveAngle);
+        float v = 90 - u;
+
+        float magnitude = rb.velocity.magnitude;
+        float xMagnitude = magnitude * Mathf.Cos(v * Mathf.Deg2Rad);
+        float yMagnitude = magnitude * Mathf.Cos(u * Mathf.Deg2Rad);
+
+        return new Vector2(xMagnitude, yMagnitude);
+    }
+
+    // Figures out characteristic of the floor we are standing on
+    private bool IsFloor(Vector3 vector)
+    {
+        float angle = Vector3.Angle(Vector3.up, vector);
+        return angle < maxSlopeAngle;
+    }
+
+    private bool cancellingGrounded;
+    private void OnCollisionStay(Collision collision)
+    {
+        // Ensures that we are using ground layers
+        int layer = collision.gameObject.layer;
+        if (groundLayer != (groundLayer | (1 << layer))) return;
+
+        // Checks every "ground" layer surface
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            Vector3 normal = collision.contacts[i].normal;
+            // Is the player touching the floor?
+            if (IsFloor(normal))
+            {
+                grounded = true;
+                cancellingGrounded = false;
+                normalVector = normal;
+                CancelInvoke(nameof(StopGrounded));
+            }
+        }
+
+        // Fixes ground/wall collision detection
+        float delay = 3f;
+        if (!cancellingGrounded)
+        {
+            cancellingGrounded = true;
+            Invoke(nameof(StopGrounded), Time.deltaTime * delay);
+        }
+    }
+
+    private void StopGrounded()
+    {
+        grounded = false;
     }
 }

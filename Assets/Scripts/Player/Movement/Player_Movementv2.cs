@@ -60,11 +60,17 @@ public class Player_Movementv2 : MonoBehaviour
     private Transform PlayerTransform;
     private Transform PlayerCamera;
 
+    private bool crouching;
+    private float crouchValue = 1.8f;
+    private Vector3 crouchScale = new Vector3(1, 0.55f, 1);
+    private Vector3 playerScale;
+
     private void Start()
     {
         // Initialize user
         PlayerTransform = transform;
         Player = GetComponent<CharacterController>();
+        playerScale = transform.localScale;
 
         if (!Camera)
         {
@@ -79,6 +85,7 @@ public class Player_Movementv2 : MonoBehaviour
     {
         // Update player states
         MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        crouching = Input.GetButton("Crouch");
         MouseLook.UpdateCursorLock();
         QueueJump();
 
@@ -89,6 +96,16 @@ public class Player_Movementv2 : MonoBehaviour
         else
         {
             AirMove();
+        }
+
+        if (Input.GetButtonDown("Crouch"))
+        {
+            StartCrouch();
+        }
+
+        if (Input.GetButtonUp("Crouch"))
+        {
+            StopCrouch();
         }
 
         MouseLook.LookRotation(PlayerTransform, PlayerCamera);
@@ -279,5 +296,28 @@ public class Player_Movementv2 : MonoBehaviour
 
         PlayerVelocity.x += accelSpeed * targetDir.x;
         PlayerVelocity.z += accelSpeed * targetDir.z;
+    }
+
+    private void StartCrouch()
+    {
+        // Scale player down to crouch size
+        // TODO (if time permits): Animation to match crouch instead of "squishing" the player downwards to simulate a crouch
+        Player.height -= crouchValue;
+        transform.localScale = crouchScale;
+        transform.position = new Vector3(transform.position.x, transform.position.y - crouchValue, transform.position.z);
+
+        // Crouch jumping
+        if (!Player.isGrounded)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
+        }
+    }
+
+    private void StopCrouch()
+    {
+        // Re-scale player back to normal standing size
+        Player.height += crouchValue;
+        transform.localScale = playerScale;
+        transform.position = new Vector3(transform.position.x, transform.position.y + crouchValue, transform.position.z);
     }
 }

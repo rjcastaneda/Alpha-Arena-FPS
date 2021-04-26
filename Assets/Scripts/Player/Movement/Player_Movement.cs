@@ -13,7 +13,7 @@ public class Player_Movement : MonoBehaviour
 
     // Sensitivity Variables
     private float xRotation;
-    private float sensitivity = 25f;
+    private float sensitivity = 50f;
     private float sensMultiplier = 1f;
 
     // Movement Variables
@@ -125,7 +125,7 @@ public class Player_Movement : MonoBehaviour
         float xMagnitude = magnitude.x;
         float yMagnitude = magnitude.y;
 
-        // Used to tune movement
+        // Used to tune movement friction
         CounterMovement(x, y, magnitude);
 
         // Allows player to jump multiple times
@@ -150,18 +150,17 @@ public class Player_Movement : MonoBehaviour
         // One liners for legibility
         if (x > 0 && xMagnitude > maxSpeed) x = 0;
         if (x < 0 && xMagnitude < -maxSpeed) x = 0;
-        if (y > 0 && yMagnitude < maxSpeed) y = 0;
+        if (y > 0 && yMagnitude > maxSpeed) y = 0;
         if (y < 0 && yMagnitude < -maxSpeed) y = 0;
 
         float multiplier = 1f;
         float multiplierV = 1f;
 
         // Air movement scalings
-        // Jumping makes us go faster because go fast = fun
         if (!grounded)
         {
-            multiplier = 1.1f;
-            multiplierV = 1.1f;
+            multiplier = 0.5f;
+            multiplierV = 0.5f;
         }
 
         // Movement while sliding
@@ -189,7 +188,7 @@ public class Player_Movement : MonoBehaviour
             Vector3 magnitude = rb.velocity;
             if (rb.velocity.y < 0.5f)
             {
-                rb.velocity = new Vector3(magnitude.x, 0, magnitude.y);
+                rb.velocity = new Vector3(magnitude.x, 0, magnitude.z);
             }
             else if (rb.velocity.y > 0)
             {
@@ -225,6 +224,7 @@ public class Player_Movement : MonoBehaviour
         orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
     }
 
+    // Friction
     private void CounterMovement(float x, float y, Vector2 magnitude)
     {
         // Jumping handled elsewhere

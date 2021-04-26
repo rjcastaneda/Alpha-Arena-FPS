@@ -6208,7 +6208,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 218844135}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ae564b8cab33364983b815eee5e3740, type: 3}
   m_Name: 
@@ -6245,6 +6245,45 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &218844138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218844135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed410cc268ebf05439a4fbd7d2edd877, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Camera: {fileID: 0}
+  MouseLook:
+    XSensitivity: 2
+    YSensitivity: 2
+    ClampVerticalRotation: 1
+    MinimumX: -90
+    MaximumX: 90
+    Smooth: 0
+    SmoothTime: 5
+    LockCursor: 1
+  Friction: 6
+  Gravity: 20
+  JumpForce: 8
+  AutoBunnyHop: 0
+  PlayerAirControl: 0.3
+  GroundSettings:
+    MaxSpeed: 7
+    Acceleration: 14
+    Deceleration: 10
+  AirSettings:
+    MaxSpeed: 7
+    Acceleration: 2
+    Deceleration: 2
+  StrafeSettings:
+    MaxSpeed: 1
+    Acceleration: 50
+    Deceleration: 50
 --- !u!136 &218844139
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -6259,6 +6298,24 @@ CapsuleCollider:
   m_Height: 3.355218
   m_Direction: 1
   m_Center: {x: 0, y: 1.7147603, z: 0}
+--- !u!143 &218844140
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218844135}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 6.77
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &223260838
 GameObject:
   m_ObjectHideFlags: 0

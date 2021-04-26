@@ -24,7 +24,7 @@ public class Player_Movementv2 : MonoBehaviour
     // Keep everything private, since everything is going to be networked, public variables can be easily accessed at will
     [Header("Aiming")]
     [SerializeField] private Camera Camera;
-    [SerializeField] private MouseLook MouseLook = new MouseLook();
+    [SerializeField] private Player_MouseLook MouseLook = new Player_MouseLook();
 
     // Default Quake 3 movement variables converted to unity
     [Header("Movement")]
@@ -34,7 +34,7 @@ public class Player_Movementv2 : MonoBehaviour
     [Tooltip("Automatically jump when holding jump button")]
     [SerializeField] private bool AutoBunnyHop = false;
     [Tooltip("Air control precision")]
-    [SerializeField] private float AirControl = 0.3f;
+    [SerializeField] private float PlayerAirControl = 0.3f;
     [SerializeField] private MovementSettings GroundSettings = new MovementSettings(7, 14, 10);
     [SerializeField] private MovementSettings AirSettings = new MovementSettings(7, 2, 2);
     [SerializeField] private MovementSettings StrafeSettings = new MovementSettings(1, 50, 50);
@@ -153,7 +153,7 @@ public class Player_Movementv2 : MonoBehaviour
         }
 
         Accelerate(wishdir, wishspeed, accel);
-        if (AirControl > 0)
+        if (PlayerAirControl > 0)
         {
             AirControl(wishdir, wishspeed2);
         }
@@ -179,7 +179,7 @@ public class Player_Movementv2 : MonoBehaviour
 
         float dot = Vector3.Dot(PlayerVelocity, targetDir);
         float k = 32;
-        k *= AirControl * dot * dot * Time.deltaTime;
+        k *= PlayerAirControl * dot * dot * Time.deltaTime;
 
         // Slows down while changing our direction
         if (dot > 0)

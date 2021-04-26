@@ -17,11 +17,11 @@ public class GunInfo : ItemInfo
     [Tooltip("Amount of rounds that can be stored in the weapon's magazine or clip.")]
     public int magSize;
 
-    [Tooltip("Amount of rounds currently in the weapon's magazine or clip. This should be the same as mag size when the weapon is spawned.")]
-    public int currentMagSize;
+    [Tooltip("Amount of rounds currently in the weapon's magazine or clip. This should be the same as mag size when the weapon is initially spawned.")]
+    public int currentAmmo;
 
-    [Tooltip("Index of the ammo pool that the weapon draws from. To be determined.")]
-    public int ammoType;
+    [Tooltip("The maximum amount of ammo that the weapon can hold in reserve.")]
+    public int maxAmmo;
 
     [Tooltip("Time it takes to finish reloading.")]
     public float reloadTime;

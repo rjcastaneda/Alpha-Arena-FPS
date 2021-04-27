@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class Player_Movementv2 : MonoBehaviour
+public class Player_Movement : MonoBehaviour
 {
     // Class for applying different movement behaviors for ground, air, strafe
     [System.Serializable]
@@ -304,7 +304,7 @@ public class Player_Movementv2 : MonoBehaviour
         // TODO (if time permits): Animation to match crouch instead of "squishing" the player downwards to simulate a crouch
         Player.height -= crouchValue;
         transform.localScale = crouchScale;
-        transform.position = new Vector3(transform.position.x, transform.position.y - crouchValue, transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y - 10f, transform.position.z);
 
         // Crouch jumping
         if (!Player.isGrounded)

@@ -10,14 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ad751678e2cf6040a816a4fb0a025b9, type: 3}
-  m_Name: Pistol
+  m_Name: Rifle
   m_EditorClassIdentifier: 
-  itemName: Pistol
-  damage: 5
-  rateOfFire: 0.4
-  rateOfFireAlt: 0.2
-  magSize: 8
-  currentAmmo: 8
-  maxAmmo: 24
-  reloadTime: 1
-  reloadTimeEmpty: 2
+  itemName: Assault Rifle
+  damage: 10
+  rateOfFire: 0.1
+  rateOfFireAlt: 0.1
+  magSize: 30
+  currentAmmo: 30
+  maxAmmo: 90
+  reloadTime: 2
+  reloadTimeEmpty: 3
+  primaryFireSound: {fileID: 8300000, guid: 589e4f0dbd9027a4d8c611540658f309, type: 3}
+  alternateFireSound: {fileID: 0}

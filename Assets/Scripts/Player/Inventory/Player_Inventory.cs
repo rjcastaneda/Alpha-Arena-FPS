@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Player_Inventory : MonoBehaviour
 {
+    [Header("Player Options")]
     [Tooltip("Automatically swap to a new weapon when picked up.")]
     [SerializeField] private bool AutoSwapNewWeapon = false;
 
+    [Header("Inventory")]
     [Tooltip("Primary weapon that the player starts with.")]
     [SerializeField] private GameObject StartingWeaponPrimary;
 
@@ -33,7 +35,7 @@ public class Player_Inventory : MonoBehaviour
         }
         if (inventory.Count > 0)
         {
-            EquipItem(0);
+            EquipItem(inventory.Count - 1);
         }
         else
             Debug.LogError("No primary or secondary starting weapon specified!");
@@ -72,7 +74,13 @@ public class Player_Inventory : MonoBehaviour
 
     void Update()
     {
-        //Loop to check for weapon swapping
+        CheckSwapWeapon();
+        CheckFireWeapon();
+    }
+
+    void CheckSwapWeapon()
+    {
+        //Number keys
         for (int i = 0; i < inventory.Count; i++)
         {
             if (Input.GetKeyDown((i + 1).ToString()))
@@ -83,7 +91,8 @@ public class Player_Inventory : MonoBehaviour
         }
 
         //Scroll wheel weapon swapping
-        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f) {
+        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
+        {
             if (itemIndex >= inventory.Count - 1)
             {
                 EquipItem(0);
@@ -93,7 +102,8 @@ public class Player_Inventory : MonoBehaviour
                 EquipItem(itemIndex + 1);
             }
         }
-        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f) {
+        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+        {
             if (itemIndex <= 0)
             {
                 EquipItem(inventory.Count - 1);
@@ -103,5 +113,10 @@ public class Player_Inventory : MonoBehaviour
                 EquipItem(itemIndex - 1);
             }
         }
+    }
+
+    void CheckFireWeapon()
+    {
+
     }
 }

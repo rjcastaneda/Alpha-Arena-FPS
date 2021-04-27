@@ -36,7 +36,7 @@ public class Player_Inventory : MonoBehaviour
             EquipItem(0);
         }
         else
-            Debug.LogError("No primary or secondary starting weapon specified! Fix this!");
+            Debug.LogError("No primary or secondary starting weapon specified!");
     }
 
     void EquipItem(int index)
@@ -63,6 +63,7 @@ public class Player_Inventory : MonoBehaviour
         obj.transform.localPosition = Vector3.zero;
 
         inventory.Add(obj.GetComponent<StandardGun>());
+
         if (AutoSwapNewWeapon)
         {
             EquipItem(inventory.Count - 1);
@@ -78,6 +79,28 @@ public class Player_Inventory : MonoBehaviour
             {
                 EquipItem(i);
                 break;
+            }
+        }
+
+        //Scroll wheel weapon swapping
+        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f) {
+            if (itemIndex >= inventory.Count - 1)
+            {
+                EquipItem(0);
+            }
+            else
+            {
+                EquipItem(itemIndex + 1);
+            }
+        }
+        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f) {
+            if (itemIndex <= 0)
+            {
+                EquipItem(inventory.Count - 1);
+            }
+            else
+            {
+                EquipItem(itemIndex - 1);
             }
         }
     }

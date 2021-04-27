@@ -28,4 +28,10 @@ public class GunInfo : ItemInfo
 
     [Tooltip("Time it takes to finish reloading if the weapon is empty.")]
     public float reloadTimeEmpty;
+
+    [Tooltip("Sound used for the primary attack.")]
+    public AudioClip primaryFireSound;
+
+    [Tooltip("Sound used for the alternate attack.")]
+    public AudioClip alternateFireSound;
 }

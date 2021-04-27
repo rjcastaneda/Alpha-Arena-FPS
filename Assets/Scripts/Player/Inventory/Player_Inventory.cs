@@ -20,8 +20,12 @@ public class Player_Inventory : MonoBehaviour
 
     [SerializeField] private List<Item> inventory = new List<Item>();
 
-    int itemIndex;
-    int previousItemIndex = -1;
+    [SerializeField] private Camera Camera; //TODO: some sort of global class that handles basic things like the camera?
+
+    private int itemIndex;
+    private int previousItemIndex = -1;
+
+    private float nextFire = 0f;
 
     void Start()
     {
@@ -61,8 +65,7 @@ public class Player_Inventory : MonoBehaviour
 
     void PickUpItem(GameObject obj)
     {
-        obj.transform.SetParent(inventoryObject.transform);
-        obj.transform.localPosition = Vector3.zero;
+        SetItemParent(obj);
 
         inventory.Add(obj.GetComponent<StandardGun>());
 
@@ -70,6 +73,13 @@ public class Player_Inventory : MonoBehaviour
         {
             EquipItem(inventory.Count - 1);
         }
+    }
+
+    void SetItemParent(GameObject obj)
+    {
+        obj.transform.SetParent(inventoryObject.transform);
+        obj.transform.localPosition = Vector3.zero;
+        obj.GetComponent<StandardGun>().AddCamera(Camera);  //Pass a reference to the player camera to the gun so it knows where to draw raycasts from
     }
 
     void Update()
@@ -117,6 +127,13 @@ public class Player_Inventory : MonoBehaviour
 
     void CheckFireWeapon()
     {
-
+        if (Input.GetMouseButtonDown(0))
+        {
+            inventory[itemIndex].Fire();
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            inventory[itemIndex].AltFire();
+        }
     }
 }

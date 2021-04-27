@@ -197,6 +197,7 @@ MonoBehaviour:
     type: 3}
   inventoryObject: {fileID: 8860865030214829320}
   inventory: []
+  Camera: {fileID: 5608244588167108645}
 --- !u!1 &3877158995854201898
 GameObject:
   m_ObjectHideFlags: 0
@@ -2296,7 +2297,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8860865030214829320}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: -0.07000005, z: 0.2840004}
+  m_LocalPosition: {x: 0.36, y: -0.34, z: 0.2840004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5608244588167108647}

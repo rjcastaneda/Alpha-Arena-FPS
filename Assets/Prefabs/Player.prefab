@@ -191,8 +191,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoSwapNewWeapon: 0
-  StartingWeapon: {fileID: 8193729086119604519, guid: 1ab5e952ee0ab2d45b20da2f66b774c9,
+  StartingWeaponPrimary: {fileID: 8193729086119604519, guid: 1ab5e952ee0ab2d45b20da2f66b774c9,
     type: 3}
+  StartingWeaponSecondary: {fileID: 7731280652850974693, guid: 02c5120e557fe964f9ef5e92f550a340,
+    type: 3}
+  inventoryObject: {fileID: 8860865030214829320}
   inventory: []
 --- !u!1 &3877158995854201898
 GameObject:

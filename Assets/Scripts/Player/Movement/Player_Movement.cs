@@ -62,6 +62,9 @@ public class Player_Movement : MonoBehaviour
 
     private bool crouching;
     private float crouchValue = 1.8f;
+    private float standValue = 3.5f;
+    private float currentHeightValue = 3.5f;
+    private float crouchCenterValue = -0.85f;
     private Vector3 crouchScale = new Vector3(1, 0.55f, 1);
     private Vector3 playerScale;
 
@@ -108,6 +111,9 @@ public class Player_Movement : MonoBehaviour
             StopCrouch();
         }
 
+        var lastHeight = Player.height;
+        Player.height = Mathf.Lerp(Player.height, currentHeightValue, 20 * Time.deltaTime);
+        transform.position += new Vector3(0 , (Player.height - lastHeight) / 2, 0);
         MouseLook.LookRotation(PlayerTransform, PlayerCamera);
         Player.Move(PlayerVelocity * Time.deltaTime);
     }
@@ -302,22 +308,25 @@ public class Player_Movement : MonoBehaviour
     {
         // Scale player down to crouch size
         // TODO (if time permits): Animation to match crouch instead of "squishing" the player downwards to simulate a crouch
-        Player.height -= crouchValue;
-        transform.localScale = crouchScale;
-        transform.position = new Vector3(transform.position.x, transform.position.y - 10f, transform.position.z);
-
+        //Player.height = crouchValue;
+        //Player.center = new Vector3(Player.center.x, crouchCenterValue, Player.center.z);
+        //transform.localScale = crouchScale;
+        //transform.position = new Vector3(transform.position.x, transform.position.y - 10f, transform.position.z);
+        currentHeightValue = crouchValue;
         // Crouch jumping
         if (!Player.isGrounded)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y + 5f, transform.position.z);
         }
     }
 
     private void StopCrouch()
     {
         // Re-scale player back to normal standing size
-        Player.height += crouchValue;
-        transform.localScale = playerScale;
-        transform.position = new Vector3(transform.position.x, transform.position.y + crouchValue, transform.position.z);
+        //Player.height = standValue;
+        //Player.center = new Vector3(Player.center.x, 0, Player.center.z);
+        //transform.localScale = playerScale;
+        //transform.position = new Vector3(transform.position.x, transform.position.y + crouchValue, transform.position.z);
+        currentHeightValue = standValue;
     }
 }

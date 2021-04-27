@@ -43,8 +43,9 @@ public class MainMenu : MonoBehaviour
     //Start Game Function
     void StartGame()
     {
-        MainMenuCanvas.SetActive(false);
-        StartGameCanvas.SetActive(true);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        //MainMenuCanvas.SetActive(false);
+        //StartGameCanvas.SetActive(true);
     }
 
     //How To Play Button function

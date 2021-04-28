@@ -26,6 +26,9 @@ public class Player_Inventory : MonoBehaviour
     private int previousItemIndex = -1;
 
     private float nextFire = 0f;
+    private float reloadTime;
+
+    private Coroutine reloadCoroutine = null;
 
     //debug
     LineRenderer lr;
@@ -64,6 +67,7 @@ public class Player_Inventory : MonoBehaviour
 
         itemIndex = index;
         inventory[itemIndex].SetActive(true);
+        InterruptReload();
 
         if (previousItemIndex != -1)
         {
@@ -89,8 +93,12 @@ public class Player_Inventory : MonoBehaviour
     void Update()
     {
         CheckSwapWeapon();
-        CheckFireWeapon();
         CheckReloadWeapon();
+
+        if (reloadCoroutine == null)
+        {
+            CheckFireWeapon();
+        }
     }
 
     void CheckSwapWeapon()
@@ -144,24 +152,45 @@ public class Player_Inventory : MonoBehaviour
 
     void CheckReloadWeapon()
     {
+        Weapon cw = inventory[itemIndex].GetComponent<Weapon>();
+
         if (Input.GetKeyDown("r"))
         {
-            Reload();
+            if (cw.currentAmmo != cw.magSize)
+            {
+                Debug.Log("Starting reload for " + cw.weaponName);
+                if (cw.currentAmmo == 0)
+                {
+                    reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTimeEmpty)); //Normal reload
+                }
+                else
+                reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTime));  //Empty reload
+            }
+        }
+    }
+
+    void InterruptReload()
+    {
+        if (reloadCoroutine != null)
+        {
+            StopCoroutine(reloadCoroutine);
+            reloadCoroutine = null; //We use this to track if the player is reloading or not
         }
     }
 
     void PrimaryFire()
     {
-        if (inventory[itemIndex].GetComponent<Weapon>().currentAmmo > 0)
+        Weapon cw = inventory[itemIndex].GetComponent<Weapon>();
+        if (cw.currentAmmo > 0)
         {
             if (Time.time > nextFire)
             {
                 nextFire = Time.time;
-                nextFire += inventory[itemIndex].GetComponent<Weapon>().rateOfFire;
+                nextFire += cw.rateOfFire;
 
                 //Gross debug raycast stuff start
                 ////////////////////////////////
-                Debug.Log("Primary fire for " + inventory[itemIndex].GetComponent<Weapon>().weaponName);
+                Debug.Log("Primary fire for " + cw.weaponName);
 
                 Ray ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
                 ray.origin = Camera.transform.position;
@@ -176,9 +205,9 @@ public class Player_Inventory : MonoBehaviour
                 ////////////////////////////////
                 //Gross debug raycast stuff end
 
-                inventory[itemIndex].GetComponent<Weapon>().currentAmmo -= 1;
+                cw.currentAmmo -= 1;
 
-                inventory[itemIndex].GetComponent<AudioSource>().PlayOneShot(inventory[itemIndex].GetComponent<Weapon>().primaryFireSound, 0.5f);
+                inventory[itemIndex].GetComponent<AudioSource>().PlayOneShot(cw.primaryFireSound, 0.5f);
             }
         }
     }
@@ -190,18 +219,27 @@ public class Player_Inventory : MonoBehaviour
 
     void Reload()
     {
-        if (inventory[itemIndex].GetComponent<Weapon>().currentAmmo != inventory[itemIndex].GetComponent<Weapon>().magSize)
+        Weapon cw = inventory[itemIndex].GetComponent<Weapon>();
+        Debug.Log("Reloaded " + cw.weaponName);
+        if (cw.currentAmmo != cw.magSize)
         {
-            if (inventory[itemIndex].GetComponent<Weapon>().magSize > inventory[itemIndex].GetComponent<Weapon>().maxAmmo)
+            if (cw.magSize > cw.maxAmmo)
             {
-                inventory[itemIndex].GetComponent<Weapon>().currentAmmo = inventory[itemIndex].GetComponent<Weapon>().maxAmmo;
-                inventory[itemIndex].GetComponent<Weapon>().maxAmmo -= inventory[itemIndex].GetComponent<Weapon>().maxAmmo;
+                cw.currentAmmo = cw.maxAmmo;
+                cw.maxAmmo -= cw.maxAmmo;
             }
             else
             {
-                inventory[itemIndex].GetComponent<Weapon>().maxAmmo -= (inventory[itemIndex].GetComponent<Weapon>().magSize - inventory[itemIndex].GetComponent<Weapon>().currentAmmo);
-                inventory[itemIndex].GetComponent<Weapon>().currentAmmo = inventory[itemIndex].GetComponent<Weapon>().magSize;
+                cw.maxAmmo -= (cw.magSize - cw.currentAmmo);
+                cw.currentAmmo = cw.magSize;
             }
         }
+        reloadCoroutine = null;
+    }
+
+    IEnumerator ReloadWeapon(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Reload();
     }
 }

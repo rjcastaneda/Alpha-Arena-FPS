@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Team 8 FPS Project/Create New Gun")]
-public class GunInfo : ItemInfo
+public class Weapon : MonoBehaviour
 {
+    public string weaponName;
+
+    [Header("Weapon Stats")]
     [Tooltip("Weapon damage.")]
     public int damage;
 
@@ -28,4 +30,11 @@ public class GunInfo : ItemInfo
 
     [Tooltip("Time it takes to finish reloading if the weapon is empty.")]
     public float reloadTimeEmpty;
+
+    [Header("Weapon Sounds")]
+    [Tooltip("Sound used for the primary attack.")]
+    public AudioClip primaryFireSound;
+
+    [Tooltip("Sound used for the alternate attack.")]
+    public AudioClip alternateFireSound;
 }

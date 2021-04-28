@@ -12,6 +12,7 @@ public class Spawner : MonoBehaviour
     public bool readyForSpawn;
     public List<GameObject> players;
     public Vector3 position;
+    public Transform spawnTransform;
 
     private SphereCollider spawnerCollider;
     private SpawnManager spawnManager;
@@ -23,6 +24,7 @@ public class Spawner : MonoBehaviour
         spawnManager = GameObject.Find("GameManager").GetComponent<SpawnManager>();
         players = new List<GameObject>();
         position = transform.position;
+        spawnTransform = this.transform;
         spawnerCollider.radius = collRadius;
         readyForSpawn = true;
     }

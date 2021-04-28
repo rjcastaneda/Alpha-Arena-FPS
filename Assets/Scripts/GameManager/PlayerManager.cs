@@ -28,7 +28,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     void CreatePlayer()
     {
         Transform spawnpoint = spawnManager.GetSpawnPoint();
-        player = PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
+        player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), spawnpoint.position, spawnpoint.rotation, 0, new object[] { PV.ViewID });
         playerData = player.GetComponent<PlayerData>();
     }
 

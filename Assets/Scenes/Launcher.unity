@@ -1414,7 +1414,7 @@ MonoBehaviour:
   playerListContent: {fileID: 1729316930}
   playerListPrefab: {fileID: 4324630538209591159, guid: 07f81264ff5217e4db9c76cd7781aedb,
     type: 3}
-  startGameButton: {fileID: 0}
+  startGameButton: {fileID: 1917420991}
   PlayerNameInputField: {fileID: 1542912350}
 --- !u!114 &652957350
 MonoBehaviour:
@@ -2614,7 +2614,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1205451627
 RectTransform:
   m_ObjectHideFlags: 0

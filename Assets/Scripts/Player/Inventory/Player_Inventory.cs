@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -117,7 +118,13 @@ public class Player_Inventory : MonoBehaviour
 
     private void AddAmmoToWeapon(int index, int amount)
     {
-        inventory[index].GetComponent<Weapon>().maxAmmo += amount;
+        Weapon WC = inventory[index].GetComponent<Weapon>();
+        if (WC.currentReserveAmmo + amount > WC.maxReserveAmmo)
+        {
+            WC.currentReserveAmmo = WC.maxReserveAmmo;
+        }
+        else
+            WC.currentReserveAmmo += amount;
     }
 
     void Update()
@@ -186,7 +193,7 @@ public class Player_Inventory : MonoBehaviour
 
         if (Input.GetKeyDown("r"))
         {
-            if ( (cw.currentAmmo != cw.magSize) & (cw.maxAmmo != 0) & (reloadCoroutine == null) )
+            if ( (cw.currentAmmo != cw.magSize) & (cw.currentReserveAmmo != 0) & (reloadCoroutine == null) )
             {
                 Debug.Log("Starting reload for " + cw.weaponName);
                 if (cw.currentAmmo == 0)
@@ -253,14 +260,14 @@ public class Player_Inventory : MonoBehaviour
         Debug.Log("Reloaded " + cw.weaponName);
         if (cw.currentAmmo != cw.magSize)
         {
-            if (cw.magSize > cw.maxAmmo)
+            if (cw.magSize > cw.currentReserveAmmo)
             {
-                cw.currentAmmo = cw.maxAmmo;
-                cw.maxAmmo -= cw.maxAmmo;
+                cw.currentAmmo = cw.currentReserveAmmo;
+                cw.currentReserveAmmo -= cw.currentReserveAmmo;
             }
             else
             {
-                cw.maxAmmo -= (cw.magSize - cw.currentAmmo);
+                cw.currentReserveAmmo -= (cw.magSize - cw.currentAmmo);
                 cw.currentAmmo = cw.magSize;
             }
         }

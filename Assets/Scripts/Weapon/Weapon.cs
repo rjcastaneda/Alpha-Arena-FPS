@@ -22,8 +22,11 @@ public class Weapon : MonoBehaviour
     [Tooltip("Amount of rounds currently in the weapon's magazine or clip. This should be the same as mag size when the weapon is initially spawned.")]
     public int currentAmmo;
 
+    [Tooltip("The current amount of ammo that the weapon has in reserve. This should be the same as max reserve ammo when the weapon is initially spawned.")]
+    public int currentReserveAmmo;
+
     [Tooltip("The maximum amount of ammo that the weapon can hold in reserve.")]
-    public int maxAmmo;
+    public int maxReserveAmmo;
 
     [Tooltip("Time it takes to finish reloading.")]
     public float reloadTime;

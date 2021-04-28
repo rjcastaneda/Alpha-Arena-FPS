@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 //To be placed on Spawner objects
 public class Spawner : MonoBehaviour
@@ -12,6 +13,7 @@ public class Spawner : MonoBehaviour
     public bool readyForSpawn;
     public List<GameObject> players;
     public Vector3 position;
+    public Transform spawnTransform;
 
     private SphereCollider spawnerCollider;
     private SpawnManager spawnManager;
@@ -23,6 +25,7 @@ public class Spawner : MonoBehaviour
         spawnManager = GameObject.Find("GameManager").GetComponent<SpawnManager>();
         players = new List<GameObject>();
         position = transform.position;
+        spawnTransform = this.transform;
         spawnerCollider.radius = collRadius;
         readyForSpawn = true;
     }
@@ -90,4 +93,18 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    //Keeps syncing spawner data to other players.
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(timeForSpawn);
+            stream.SendNext(readyForSpawn);
+        }
+        else if (stream.IsReading)
+        {
+            timeForSpawn = (float)stream.ReceiveNext();
+            readyForSpawn = (bool)stream.ReceiveNext();
+        }
+    }
 }

@@ -18,8 +18,8 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: 
-    Server: localhost
+    FixedRegion: usw
+    Server: 
     Port: 5055
     ProxyServer: 
     Protocol: 0

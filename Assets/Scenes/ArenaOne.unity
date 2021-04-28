@@ -22839,7 +22839,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numSpawns: 0
-  spawnerList: []
 --- !u!43 &850568567
 Mesh:
   m_ObjectHideFlags: 0

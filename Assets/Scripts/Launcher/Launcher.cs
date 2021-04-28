@@ -19,6 +19,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] Transform playerListContent;
     [SerializeField] GameObject playerListPrefab;
     [SerializeField] GameObject startGameButton;
+    [SerializeField] TMP_InputField PlayerNameInputField;
 
     void Awake()
     {
@@ -40,9 +41,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        MenuManager.Instance.OpenMenu("lobby");
+        MenuManager.Instance.OpenMenu("setname");
         Debug.Log("Joined Lobby");
-        PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
+        //PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
     }
 
     public void CreatRoom()
@@ -77,7 +78,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        errorText.text = "Error: Cannot Creat A Room. Error: " + message;
+        errorText.text = "Error: Cannot Create A Room. Error: " + message;
         MenuManager.Instance.OpenMenu("error");
     }
 
@@ -102,6 +103,13 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(info.Name);
         MenuManager.Instance.OpenMenu("loading");
 
+    }
+
+    public void GetPlayerName()
+    {
+        if (PlayerNameInputField.text == "") { return; }
+        PhotonNetwork.NickName = PlayerNameInputField.text;
+        MenuManager.Instance.OpenMenu("lobby");
     }
 
     public override void OnLeftRoom()

@@ -7,7 +7,6 @@ using Photon.Pun;
 public class SpawnManager : MonoBehaviourPunCallbacks
 {
     public int numSpawns;
-    [SerializeField]
     private List<Spawner> spawnerList;
     private GameObject spawnerHolder;
 

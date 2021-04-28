@@ -33,7 +33,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
 
         if(playerData.health <= 0)
         {
-            
+            playerManager.PlayerDeath();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 //To be placed on Spawner objects
 public class Spawner : MonoBehaviour
@@ -92,4 +93,18 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    //Keeps syncing spawner data to other players.
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(timeForSpawn);
+            stream.SendNext(readyForSpawn);
+        }
+        else if (stream.IsReading)
+        {
+            timeForSpawn = (float)stream.ReceiveNext();
+            readyForSpawn = (bool)stream.ReceiveNext();
+        }
+    }
 }

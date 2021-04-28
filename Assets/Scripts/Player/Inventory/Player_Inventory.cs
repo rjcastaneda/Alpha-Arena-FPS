@@ -77,12 +77,17 @@ public class Player_Inventory : MonoBehaviour
         previousItemIndex = itemIndex;
     }
 
-    void PickUpItem(GameObject obj)
+    public void PickUpItem(GameObject obj)
     {
         obj.transform.SetParent(inventoryObject.transform);
         obj.transform.localPosition = Vector3.zero;
+        obj.transform.rotation = inventoryObject.transform.rotation;
 
         inventory.Add(obj);
+
+        Debug.Log("picked up " + obj);
+
+        obj.SetActive(false);
 
         if (AutoSwapNewWeapon)
         {

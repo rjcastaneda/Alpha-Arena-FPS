@@ -56,7 +56,11 @@ public class WeaponPickup : MonoBehaviour
         GameObject obj = other.gameObject;
         if (obj.tag == "Player")
         {
-            
+            if (weapon.gameObject.activeSelf)
+            {
+                obj.GetComponent<Player_Inventory>().PickUpItem(Instantiate(weaponPickup));
+                weapon.SetActive(false);
+            }
         }
     }
 }

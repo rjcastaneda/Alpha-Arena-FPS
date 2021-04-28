@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Team 8 FPS Project/Create New Gun")]
-public class GunInfo : ItemInfo
+public class Weapon : MonoBehaviour
 {
+    public string weaponName;
+
     [Header("Weapon Stats")]
     [Tooltip("Weapon damage.")]
     public int damage;

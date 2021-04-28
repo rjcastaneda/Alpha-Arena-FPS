@@ -18,12 +18,17 @@ public class Player_Inventory : MonoBehaviour
     [Tooltip("The game object/point that weapons attach to.")]
     [SerializeField] private GameObject inventoryObject;    //TODO rename this
 
-    [SerializeField] private List<Item> inventory = new List<Item>();
+    [SerializeField] private List<GameObject> inventory = new List<GameObject>();
 
     [SerializeField] private Camera Camera; //TODO: some sort of global class that handles basic things like the camera?
 
     private int itemIndex;
     private int previousItemIndex = -1;
+
+    private float nextFire = 0f;
+
+    //debug
+    LineRenderer lr;
 
     void Start()
     {
@@ -41,6 +46,13 @@ public class Player_Inventory : MonoBehaviour
         }
         else
             Debug.LogError("No primary or secondary starting weapon specified!");
+
+        //debugging
+        lr = gameObject.AddComponent<LineRenderer>();
+        lr.useWorldSpace = true;
+        lr.enabled = false;
+        lr.startWidth = 0.2f;
+        lr.endWidth = 0.2f;
     }
 
     void EquipItem(int index)
@@ -51,11 +63,11 @@ public class Player_Inventory : MonoBehaviour
         }
 
         itemIndex = index;
-        inventory[itemIndex].itemGameObject.SetActive(true);
+        inventory[itemIndex].SetActive(true);
 
         if (previousItemIndex != -1)
         {
-            inventory[previousItemIndex].itemGameObject.SetActive(false);
+            inventory[previousItemIndex].SetActive(false);
         }
 
         previousItemIndex = itemIndex;
@@ -63,9 +75,10 @@ public class Player_Inventory : MonoBehaviour
 
     void PickUpItem(GameObject obj)
     {
-        SetItemParent(obj);
+        obj.transform.SetParent(inventoryObject.transform);
+        obj.transform.localPosition = Vector3.zero;
 
-        inventory.Add(obj.GetComponent<StandardGun>());
+        inventory.Add(obj);
 
         if (AutoSwapNewWeapon)
         {
@@ -73,17 +86,11 @@ public class Player_Inventory : MonoBehaviour
         }
     }
 
-    void SetItemParent(GameObject obj)
-    {
-        obj.transform.SetParent(inventoryObject.transform);
-        obj.transform.localPosition = Vector3.zero;
-        obj.GetComponent<StandardGun>().AddCamera(Camera);  //Pass a reference to the player camera to the gun so it knows where to draw raycasts from
-    }
-
     void Update()
     {
         CheckSwapWeapon();
         CheckFireWeapon();
+        CheckReloadWeapon();
     }
 
     void CheckSwapWeapon()
@@ -127,11 +134,74 @@ public class Player_Inventory : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            inventory[itemIndex].Fire();
+            PrimaryFire();
         }
-        else if (Input.GetMouseButtonDown(1))
+        else if (Input.GetMouseButton(1))
         {
-            inventory[itemIndex].AltFire();
+            AltFire();
+        }
+    }
+
+    void CheckReloadWeapon()
+    {
+        if (Input.GetKeyDown("r"))
+        {
+            Reload();
+        }
+    }
+
+    void PrimaryFire()
+    {
+        if (inventory[itemIndex].GetComponent<Weapon>().currentAmmo > 0)
+        {
+            if (Time.time > nextFire)
+            {
+                nextFire = Time.time;
+                nextFire += inventory[itemIndex].GetComponent<Weapon>().rateOfFire;
+
+                //Gross debug raycast stuff start
+                ////////////////////////////////
+                Debug.Log("Primary fire for " + inventory[itemIndex].GetComponent<Weapon>().weaponName);
+
+                Ray ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+                ray.origin = Camera.transform.position;
+
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    Debug.Log("Hit " + hit.collider.gameObject.name);
+                    lr.enabled = true;
+                    lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
+                    lr.SetPosition(1, hit.point);
+                }
+                ////////////////////////////////
+                //Gross debug raycast stuff end
+
+                inventory[itemIndex].GetComponent<Weapon>().currentAmmo -= 1;
+
+                inventory[itemIndex].GetComponent<AudioSource>().PlayOneShot(inventory[itemIndex].GetComponent<Weapon>().primaryFireSound, 0.5f);
+            }
+        }
+    }
+
+    void AltFire()
+    {
+
+    }
+
+    void Reload()
+    {
+        if (inventory[itemIndex].GetComponent<Weapon>().currentAmmo != inventory[itemIndex].GetComponent<Weapon>().magSize)
+        {
+            if (inventory[itemIndex].GetComponent<Weapon>().magSize > inventory[itemIndex].GetComponent<Weapon>().maxAmmo)
+            {
+                inventory[itemIndex].GetComponent<Weapon>().currentAmmo = inventory[itemIndex].GetComponent<Weapon>().maxAmmo;
+                inventory[itemIndex].GetComponent<Weapon>().maxAmmo -= inventory[itemIndex].GetComponent<Weapon>().maxAmmo;
+            }
+            else
+            {
+                inventory[itemIndex].GetComponent<Weapon>().maxAmmo -= (inventory[itemIndex].GetComponent<Weapon>().magSize - inventory[itemIndex].GetComponent<Weapon>().currentAmmo);
+                inventory[itemIndex].GetComponent<Weapon>().currentAmmo = inventory[itemIndex].GetComponent<Weapon>().magSize;
+            }
         }
     }
 }

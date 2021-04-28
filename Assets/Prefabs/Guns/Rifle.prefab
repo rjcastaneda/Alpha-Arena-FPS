@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7731280652850974695}
-  - component: {fileID: 7731280652850974692}
   - component: {fileID: 4601105147172038727}
+  - component: {fileID: -5514714223085703410}
   m_Layer: 0
   m_Name: Rifle
   m_TagString: Untagged
@@ -33,20 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7731280652850974692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7731280652850974693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8381149224739734c852a16e059b4e5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemInfo: {fileID: 11400000, guid: 393e52197d8c1304d9c576322ba86dd7, type: 2}
-  itemGameObject: {fileID: 7731280653590588749}
 --- !u!82 &4601105147172038727
 AudioSource:
   m_ObjectHideFlags: 0
@@ -143,6 +129,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-5514714223085703410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7731280652850974693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8381149224739734c852a16e059b4e5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponName: Assault Rifle
+  damage: 10
+  rateOfFire: 0.1
+  rateOfFireAlt: 0.1
+  magSize: 30
+  currentAmmo: 30
+  maxAmmo: 90
+  reloadTime: 2
+  reloadTimeEmpty: 3
+  primaryFireSound: {fileID: 8300000, guid: 589e4f0dbd9027a4d8c611540658f309, type: 3}
+  alternateFireSound: {fileID: 0}
 --- !u!1 &7731280653590588749
 GameObject:
   m_ObjectHideFlags: 0

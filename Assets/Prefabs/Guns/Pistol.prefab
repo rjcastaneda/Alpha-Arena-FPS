@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8193729086119604517}
-  - component: {fileID: 8193729086119604518}
   - component: {fileID: 2165211882833639988}
+  - component: {fileID: -1494447916236724859}
   m_Layer: 0
   m_Name: Pistol
   m_TagString: Untagged
@@ -33,20 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8193729086119604518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8193729086119604519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8381149224739734c852a16e059b4e5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemInfo: {fileID: 11400000, guid: 6dfa061336c68144aa6df4b98993bddc, type: 2}
-  itemGameObject: {fileID: 8193729088064869263}
 --- !u!82 &2165211882833639988
 AudioSource:
   m_ObjectHideFlags: 0
@@ -143,6 +129,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-1494447916236724859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8193729086119604519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8381149224739734c852a16e059b4e5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponName: Pistol
+  damage: 5
+  rateOfFire: 0.2
+  rateOfFireAlt: 0.2
+  magSize: 8
+  currentAmmo: 8
+  maxAmmo: 40
+  reloadTime: 1
+  reloadTimeEmpty: 2
+  primaryFireSound: {fileID: 8300000, guid: 00b5fb7a6354609459474cb392c448ff, type: 3}
+  alternateFireSound: {fileID: 0}
 --- !u!1 &8193729088064869263
 GameObject:
   m_ObjectHideFlags: 0

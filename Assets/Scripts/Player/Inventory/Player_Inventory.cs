@@ -77,15 +77,35 @@ public class Player_Inventory : MonoBehaviour
         previousItemIndex = itemIndex;
     }
 
+    private int FindWeaponIndex(string wepName)
+    {
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i].GetComponent<Weapon>().weaponName == wepName)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void PickUpItem(GameObject obj)
     {
+        int wepIndex = FindWeaponIndex(obj.GetComponent<Weapon>().weaponName);
+        if (wepIndex != -1)
+        {
+            AddAmmoToWeapon(wepIndex, obj.GetComponent<Weapon>().magSize);
+            Debug.Log("Picked up ammo for " + obj.GetComponent<Weapon>().weaponName);
+            Destroy(obj);
+            return;
+        }
         obj.transform.SetParent(inventoryObject.transform);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.rotation = inventoryObject.transform.rotation;
 
         inventory.Add(obj);
 
-        Debug.Log("picked up " + obj);
+        Debug.Log("Picked up " + obj.GetComponent<Weapon>().weaponName);
 
         obj.SetActive(false);
 
@@ -93,6 +113,11 @@ public class Player_Inventory : MonoBehaviour
         {
             EquipItem(inventory.Count - 1);
         }
+    }
+
+    private void AddAmmoToWeapon(int index, int amount)
+    {
+        inventory[index].GetComponent<Weapon>().maxAmmo += amount;
     }
 
     void Update()

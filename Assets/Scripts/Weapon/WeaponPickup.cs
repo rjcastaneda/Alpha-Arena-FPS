@@ -15,6 +15,7 @@ public class WeaponPickup : MonoBehaviour
 
     private GameObject displayPoint;
     private GameObject weapon;
+    private string weaponName;
 
     private Coroutine spawnRoutine = null;
 
@@ -23,6 +24,7 @@ public class WeaponPickup : MonoBehaviour
     {
         displayPoint = transform.Find("DisplayPoint").gameObject;
         weapon = Instantiate(weaponPickup);
+        weaponName = weaponPickup.GetComponent<Weapon>().weaponName;
 
         weapon.transform.SetParent(displayPoint.transform);
         weapon.transform.localPosition = Vector3.zero;

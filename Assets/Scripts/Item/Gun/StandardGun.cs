@@ -7,6 +7,9 @@ public class StandardGun : Gun
     AudioSource audioSource;
     Camera playerCamera;
 
+    //debug
+    LineRenderer lr;
+
     void Start()
     {
         if (!gameObject.GetComponent<AudioSource>())
@@ -15,6 +18,13 @@ public class StandardGun : Gun
             gameObject.AddComponent<AudioSource>();
         }
         audioSource = gameObject.GetComponent<AudioSource>();
+
+        //debugging
+        lr = gameObject.AddComponent<LineRenderer>();
+        lr.useWorldSpace = true;
+        lr.enabled = false;
+        lr.startWidth = 0.2f;
+        lr.endWidth = 0.2f;
     }
 
     public void AddCamera(Camera cam)
@@ -25,6 +35,16 @@ public class StandardGun : Gun
     public override void Fire()
     {
         Debug.Log("Primary fire for " + itemInfo.itemName);
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+        ray.origin = playerCamera.transform.position;
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            Debug.Log("Hit " + hit.collider.gameObject.name);
+            lr.enabled = true;
+            lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
+            lr.SetPosition(1, hit.point);
+            StartCoroutine(HideDebugRaycast(lr, 0.2f));
+        }
         audioSource.PlayOneShot(((GunInfo)itemInfo).primaryFireSound, 0.5f);
     }
 
@@ -33,4 +53,11 @@ public class StandardGun : Gun
         Debug.Log("Alternate fire for " + itemInfo.itemName);
         //audioSource.PlayOneShot(((GunInfo)itemInfo).alternateFireSound, 0.5f);
     }
+
+    IEnumerator HideDebugRaycast(LineRenderer lr, float time)
+    {
+        yield return new WaitForSeconds(time);
+        lr.enabled = false;
+    }
+
 }

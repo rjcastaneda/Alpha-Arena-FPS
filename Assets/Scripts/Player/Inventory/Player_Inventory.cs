@@ -25,8 +25,6 @@ public class Player_Inventory : MonoBehaviour
     private int itemIndex;
     private int previousItemIndex = -1;
 
-    private float nextFire = 0f;
-
     void Start()
     {
         if (StartingWeaponPrimary != null)
@@ -127,7 +125,7 @@ public class Player_Inventory : MonoBehaviour
 
     void CheckFireWeapon()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             inventory[itemIndex].Fire();
         }

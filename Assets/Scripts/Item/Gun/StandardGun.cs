@@ -7,6 +7,8 @@ public class StandardGun : Gun
     AudioSource audioSource;
     Camera playerCamera;
 
+    float nextFire = 0f;
+
     //debug
     LineRenderer lr;
 
@@ -34,30 +36,32 @@ public class StandardGun : Gun
 
     public override void Fire()
     {
-        Debug.Log("Primary fire for " + itemInfo.itemName);
-        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-        ray.origin = playerCamera.transform.position;
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Time.time > nextFire)
         {
-            Debug.Log("Hit " + hit.collider.gameObject.name);
-            lr.enabled = true;
-            lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
-            lr.SetPosition(1, hit.point);
-            StartCoroutine(HideDebugRaycast(lr, 0.2f));
+            nextFire = Time.time;
+            nextFire += ((GunInfo)itemInfo).rateOfFire;
+
+            Debug.Log("Primary fire for " + itemInfo.itemName);
+
+            Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+            ray.origin = playerCamera.transform.position;
+
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                Debug.Log("Hit " + hit.collider.gameObject.name);
+                lr.enabled = true;
+                lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
+                lr.SetPosition(1, hit.point);
+            }
+
+            audioSource.PlayOneShot(((GunInfo)itemInfo).primaryFireSound, 0.5f);
         }
-        audioSource.PlayOneShot(((GunInfo)itemInfo).primaryFireSound, 0.5f);
     }
 
     public override void AltFire()
     {
         Debug.Log("Alternate fire for " + itemInfo.itemName);
         //audioSource.PlayOneShot(((GunInfo)itemInfo).alternateFireSound, 0.5f);
-    }
-
-    IEnumerator HideDebugRaycast(LineRenderer lr, float time)
-    {
-        yield return new WaitForSeconds(time);
-        lr.enabled = false;
     }
 
 }

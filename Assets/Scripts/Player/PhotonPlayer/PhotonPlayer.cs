@@ -15,7 +15,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     {
         PV = this.gameObject.GetComponent<PhotonView>();
         playerData = this.gameObject.GetComponent<PlayerData>();
-        playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+        //playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
     }
 
     //Damage taken runs on shooter's view but data is sent to all

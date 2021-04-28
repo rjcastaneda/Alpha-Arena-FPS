@@ -36,25 +36,34 @@ public class StandardGun : Gun
 
     public override void Fire()
     {
-        if (Time.time > nextFire)
+        if (((GunInfo)itemInfo).currentAmmo > 0)
         {
-            nextFire = Time.time;
-            nextFire += ((GunInfo)itemInfo).rateOfFire;
-
-            Debug.Log("Primary fire for " + itemInfo.itemName);
-
-            Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-            ray.origin = playerCamera.transform.position;
-
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Time.time > nextFire)
             {
-                Debug.Log("Hit " + hit.collider.gameObject.name);
-                lr.enabled = true;
-                lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
-                lr.SetPosition(1, hit.point);
-            }
+                nextFire = Time.time;
+                nextFire += ((GunInfo)itemInfo).rateOfFire;
 
-            audioSource.PlayOneShot(((GunInfo)itemInfo).primaryFireSound, 0.5f);
+                //Gross debug raycast stuff start
+                ////////////////////////////////
+                Debug.Log("Primary fire for " + itemInfo.itemName);
+
+                Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+                ray.origin = playerCamera.transform.position;
+
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    Debug.Log("Hit " + hit.collider.gameObject.name);
+                    lr.enabled = true;
+                    lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
+                    lr.SetPosition(1, hit.point);
+                }
+                ////////////////////////////////
+                //Gross debug raycast stuff end
+
+                ((GunInfo)itemInfo).currentAmmo -= 1;
+
+                audioSource.PlayOneShot(((GunInfo)itemInfo).primaryFireSound, 0.5f);
+            }
         }
     }
 

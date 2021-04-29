@@ -95,6 +95,7 @@ public class Player_Movement : MonoBehaviourPunCallbacks
         if(!PV.IsMine && PhotonNetwork.IsConnected == true){
             return;
         }
+
         MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         crouching = Input.GetButton("Crouch");
         MouseLook.UpdateCursorLock();

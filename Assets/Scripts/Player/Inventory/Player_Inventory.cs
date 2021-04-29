@@ -193,7 +193,7 @@ public class Player_Inventory : MonoBehaviour
 
         if (Input.GetKeyDown("r"))
         {
-            if ( (cw.currentAmmo != cw.magSize) & (cw.currentReserveAmmo != 0) & (reloadCoroutine == null) )
+            if ( (cw.currentAmmo != cw.magSize) && (cw.currentReserveAmmo != 0) && (reloadCoroutine == null) )
             {
                 Debug.Log("Starting reload for " + cw.weaponName);
                 if (cw.currentAmmo == 0)

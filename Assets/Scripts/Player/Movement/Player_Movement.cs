@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 
 [RequireComponent(typeof(CharacterController))]
-public class Player_Movement : MonoBehaviourPun
+public class Player_Movement : MonoBehaviourPunCallbacks
 {
     // Class for applying different movement behaviors for ground, air, strafe
     [System.Serializable]
@@ -69,10 +69,13 @@ public class Player_Movement : MonoBehaviourPun
     private Vector3 crouchScale = new Vector3(1, 0.55f, 1);
     private Vector3 playerScale;
 
+    private PhotonView PV;
+
     private void Start()
     {
         // Initialize user
         PlayerTransform = transform;
+        PV = GetComponent<PhotonView>();
         Player = GetComponent<CharacterController>();
         playerScale = transform.localScale;
 
@@ -88,6 +91,10 @@ public class Player_Movement : MonoBehaviourPun
     private void Update()
     {
         // Update player states
+        //Check to make sure you are not moving other players
+        if(!PV.IsMine && PhotonNetwork.IsConnected == true){
+            return;
+        }
         MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         crouching = Input.GetButton("Crouch");
         MouseLook.UpdateCursorLock();

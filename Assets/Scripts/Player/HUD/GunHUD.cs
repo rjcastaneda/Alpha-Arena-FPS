@@ -35,7 +35,7 @@ public class GunHUD : MonoBehaviour
     {
         Weapon cw = playerInventory.GetCurrentWeapon();
         currentAmmo = cw.currentAmmo;
-        maxAmmo = cw.magSize;
+        maxAmmo = cw.currentReserveAmmo;
         AmmoText.text = currentAmmo.ToString() + "/" + maxAmmo.ToString();
         GunText.text = cw.weaponName;
     }

@@ -28,6 +28,9 @@ public class Weapon : MonoBehaviour
     [Tooltip("The maximum amount of ammo that the weapon can hold in reserve.")]
     public int maxReserveAmmo;
 
+    [Tooltip("If true, reloading will never deplete ammo from the reserve ammo pool.")]
+    public bool infiniteReserveAmmo;
+
     [Tooltip("Time it takes to finish reloading.")]
     public float reloadTime;
 

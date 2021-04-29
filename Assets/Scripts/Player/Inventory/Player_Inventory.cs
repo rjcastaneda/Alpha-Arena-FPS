@@ -303,7 +303,10 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             }
             else
             {
-                cw.currentReserveAmmo -= (cw.magSize - cw.currentAmmo);
+                if (!cw.infiniteReserveAmmo)
+                {
+                    cw.currentReserveAmmo -= (cw.magSize - cw.currentAmmo);
+                }
                 cw.currentAmmo = cw.magSize;
             }
         }

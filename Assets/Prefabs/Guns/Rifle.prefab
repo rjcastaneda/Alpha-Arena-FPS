@@ -147,7 +147,8 @@ MonoBehaviour:
   rateOfFireAlt: 0.1
   magSize: 30
   currentAmmo: 30
-  maxAmmo: 90
+  currentReserveAmmo: 90
+  maxReserveAmmo: 90
   reloadTime: 2
   reloadTimeEmpty: 3
   primaryFireSound: {fileID: 8300000, guid: 589e4f0dbd9027a4d8c611540658f309, type: 3}

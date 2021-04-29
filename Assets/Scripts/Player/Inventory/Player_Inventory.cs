@@ -67,8 +67,6 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         lr.enabled = false;
         lr.startWidth = 0.2f;
         lr.endWidth = 0.2f;
-
-        hash = new Hashtable();
     }
 
     void EquipItem(int index)
@@ -91,6 +89,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
         if (photonView.IsMine)
         {
+            Hashtable hash = new Hashtable();
             hash.Add("itemIndex", itemIndex);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }

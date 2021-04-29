@@ -75,7 +75,7 @@ public class Player_Movement : MonoBehaviourPunCallbacks
     {
         // Initialize user
         PlayerTransform = transform;
-        PV = GetComponent<PhotonView>();
+        //PV = GetComponent<PhotonView>();
         Player = GetComponent<CharacterController>();
         playerScale = transform.localScale;
 

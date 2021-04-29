@@ -12,7 +12,6 @@ public class MainMenu : MonoBehaviour
     public Button HowToPlayButton;
     private GameObject MainMenuCanvas;
     private GameObject HowToPlayCanvas;
-    private GameObject StartGameCanvas;
 
 
     // Start is called before the first frame update
@@ -20,7 +19,6 @@ public class MainMenu : MonoBehaviour
     {
         MainMenuCanvas = GameObject.Find("MainMenu");
         HowToPlayCanvas = GameObject.Find("HowToPlayMenu");
-        StartGameCanvas = GameObject.Find("StartGameMenu");
         ExitButton = MainMenuCanvas.transform.Find("ExitGameButton").gameObject.GetComponent<Button>();
         StartGameButton = MainMenuCanvas.transform.Find("StartButton").gameObject.GetComponent<Button>();
         HowToPlayButton = MainMenuCanvas.transform.Find("HowToPlayButton").gameObject.GetComponent<Button>();
@@ -32,7 +30,6 @@ public class MainMenu : MonoBehaviour
 
         //Set Defaults
         HowToPlayCanvas.SetActive(false);
-        StartGameCanvas.SetActive(false);
     }
 
     //Exit button functions
@@ -48,8 +45,6 @@ public class MainMenu : MonoBehaviour
     void StartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        //MainMenuCanvas.SetActive(false);
-        //StartGameCanvas.SetActive(true);
     }
 
     //How To Play Button function

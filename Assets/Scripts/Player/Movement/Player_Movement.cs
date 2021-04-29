@@ -91,40 +91,38 @@ public class Player_Movement : MonoBehaviourPunCallbacks
     private void Update()
     {
         // Update player states
-        //Check to make sure you are not moving other players
-        if(!PV.IsMine && PhotonNetwork.IsConnected == true){
-            return;
-        }
-
-        MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        crouching = Input.GetButton("Crouch");
-        MouseLook.UpdateCursorLock();
-        QueueJump();
-
-        if (Player.isGrounded)
+        if (PV.IsMine)
         {
-            GroundMove();
-        }
-        else
-        {
-            AirMove();
-        }
+            MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            crouching = Input.GetButton("Crouch");
+            MouseLook.UpdateCursorLock();
+            QueueJump();
 
-        if (Input.GetButtonDown("Crouch"))
-        {
-            StartCrouch();
-        }
+            if (Player.isGrounded)
+            {
+                GroundMove();
+            }
+            else
+            {
+                AirMove();
+            }
 
-        if (Input.GetButtonUp("Crouch"))
-        {
-            StopCrouch();
-        }
+            if (Input.GetButtonDown("Crouch"))
+            {
+                StartCrouch();
+            }
 
-        var lastHeight = Player.height;
-        Player.height = Mathf.Lerp(Player.height, currentHeightValue, 20 * Time.deltaTime);
-        transform.position += new Vector3(0 , (Player.height - lastHeight) / 2, 0);
-        MouseLook.LookRotation(PlayerTransform, PlayerCamera);
-        Player.Move(PlayerVelocity * Time.deltaTime);
+            if (Input.GetButtonUp("Crouch"))
+            {
+                StopCrouch();
+            }
+
+            var lastHeight = Player.height;
+            Player.height = Mathf.Lerp(Player.height, currentHeightValue, 20 * Time.deltaTime);
+            transform.position += new Vector3(0, (Player.height - lastHeight) / 2, 0);
+            MouseLook.LookRotation(PlayerTransform, PlayerCamera);
+            Player.Move(PlayerVelocity * Time.deltaTime);
+        }
     }
 
     private void QueueJump()

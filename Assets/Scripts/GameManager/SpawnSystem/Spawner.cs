@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 
 //To be placed on Spawner objects
-public class Spawner : MonoBehaviour
+public class Spawner : MonoBehaviourPunCallbacks
 {
     //Spawner Values
     public float timeForSpawn;

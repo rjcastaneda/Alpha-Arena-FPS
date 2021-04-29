@@ -38,7 +38,7 @@ public class SpawnManager : MonoBehaviourPunCallbacks
            Spawner spawner = spawnerList[spawnNum];
            
            //We check if spawners are ready and if there are nearby players
-           if(spawner.readyForSpawn && spawner.CheckIfNearby()) {
+           if(spawner.readyForSpawn /*&& spawner.CheckIfNearby()*/) {
                spawnPos = spawner.spawnTransform;
                spawner.SpawnerReset();
                foundSpawn = true; 

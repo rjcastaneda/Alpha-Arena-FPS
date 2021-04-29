@@ -2,8 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+using ExitGames.Client.Photon;
+using Photon.Realtime;
 
-public class Player_Inventory : MonoBehaviour
+public class Player_Inventory : MonoBehaviourPunCallbacks
 {
     [Header("Player Options")]
     [Tooltip("Automatically swap to a new weapon when picked up.")]
@@ -36,6 +40,10 @@ public class Player_Inventory : MonoBehaviour
 
     void Start()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         if (StartingWeaponPrimary != null)
         {
             PickUpItem(Instantiate(StartingWeaponPrimary));
@@ -76,6 +84,21 @@ public class Player_Inventory : MonoBehaviour
         }
 
         previousItemIndex = itemIndex;
+
+        if (photonView.IsMine)
+        {
+            Hashtable hash = new Hashtable();
+            hash.Add("itemIndex", itemIndex);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        }
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        if (!photonView.IsMine && targetPlayer == photonView.Owner)
+        {
+            EquipItem((int)changedProps["itemIndex"]);
+        }
     }
 
     private int FindWeaponIndex(string wepName)
@@ -129,6 +152,11 @@ public class Player_Inventory : MonoBehaviour
 
     void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
         CheckSwapWeapon();
         CheckReloadWeapon();
 

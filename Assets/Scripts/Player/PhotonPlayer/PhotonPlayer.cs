@@ -21,6 +21,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     //Damage taken runs on shooter's view but data is sent to all
     public void TakeDamage(float damage)
     {
+        Debug.Log("Dealt " + damage + " damage to other player!");
         PV.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 
@@ -30,10 +31,12 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     {
         if (!PV.IsMine) { return; }
         playerData.health -= damage;
+        Debug.Log("You took " + damage + " damage!");
 
         if(playerData.health <= 0)
         {
-            playerManager.PlayerDeath();
+            //playerManager.PlayerDeath();
+            Debug.Log("You're dead!");
         }
     }
 }

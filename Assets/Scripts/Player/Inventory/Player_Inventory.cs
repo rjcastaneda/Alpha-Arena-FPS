@@ -35,6 +35,10 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
     private Coroutine reloadCoroutine = null;
 
+    private Hashtable hash;
+
+    private PhotonPlayer photonPlayer;
+
     //debug
     LineRenderer lr;
 
@@ -87,9 +91,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
         if (photonView.IsMine)
         {
-            Hashtable hash = new Hashtable();
-            hash.Add("itemIndex", itemIndex);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            
         }
     }
 
@@ -97,7 +99,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
     {
         if (!photonView.IsMine && targetPlayer == photonView.Owner)
         {
-            EquipItem((int)changedProps["itemIndex"]);
+            //EquipItem((int)changedProps["itemIndex"]);
         }
     }
 
@@ -115,6 +117,10 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
     public void PickUpItem(GameObject obj)
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         int wepIndex = FindWeaponIndex(obj.GetComponent<Weapon>().weaponName);
         if (wepIndex != -1)
         {
@@ -255,14 +261,12 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
                 //Gross debug raycast stuff start
                 ////////////////////////////////
-                Debug.Log("Primary fire for " + cw.weaponName);
-
                 Ray ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
                 ray.origin = Camera.transform.position;
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    Debug.Log("Hit " + hit.collider.gameObject.name);
+                    hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
                     lr.enabled = true;
                     lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
                     lr.SetPosition(1, hit.point);

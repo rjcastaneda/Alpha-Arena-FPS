@@ -37,7 +37,11 @@ public class MainMenu : MonoBehaviour
 
     //Exit button functions
     void Exit() {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
+#endif
     }
 
     //Start Game Function

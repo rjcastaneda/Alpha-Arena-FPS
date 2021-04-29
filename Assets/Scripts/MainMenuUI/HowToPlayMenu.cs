@@ -12,7 +12,6 @@ public class HowToPlayMenu : MonoBehaviour
     {
         backButton = this.gameObject.transform.Find("BackButton").GetComponent<Button>();
         backButton.onClick.AddListener(Back);
-        MainMenuCanvas = GameObject.Find("MainMenu");
     }
 
     void Back()

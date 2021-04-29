@@ -6,14 +6,13 @@ using UnityEngine.UI;
 public class StartGameMenu : MonoBehaviour
 {
     public Button backButton;
-    private GameObject MainMenuCanvas;
+    public GameObject MainMenuCanvas;
 
     // Start is called before the first frame update
     void Start()
     {
         backButton = this.gameObject.transform.Find("BackButton").GetComponent<Button>();
         backButton.onClick.AddListener(Back);
-        MainMenuCanvas = GameObject.Find("MainMenu");
     }
 
     void Back()

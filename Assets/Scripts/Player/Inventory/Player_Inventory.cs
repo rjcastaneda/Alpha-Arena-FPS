@@ -89,9 +89,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
         if (photonView.IsMine)
         {
-            Hashtable hash = new Hashtable();
-            hash.Add("itemIndex", itemIndex);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            
         }
     }
 
@@ -99,7 +97,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
     {
         if (!photonView.IsMine && targetPlayer == photonView.Owner)
         {
-            EquipItem((int)changedProps["itemIndex"]);
+            //EquipItem((int)changedProps["itemIndex"]);
         }
     }
 
@@ -117,6 +115,10 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
     public void PickUpItem(GameObject obj)
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         int wepIndex = FindWeaponIndex(obj.GetComponent<Weapon>().weaponName);
         if (wepIndex != -1)
         {

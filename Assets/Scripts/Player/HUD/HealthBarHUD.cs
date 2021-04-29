@@ -15,15 +15,12 @@ public class HealthBarHUD : MonoBehaviour
     public float currentHealth;
 
     private Slider HealthSlider;
+    private PlayerData playerData;
 
     void Start()
     {
         HealthSlider = this.gameObject.GetComponent<Slider>();
-
-        //Need to integrate PlayerData with health hud.
-
-        //MaxHealth = PlayerData.maxHealth;
-        //CurrentHealth = PlayerData.currentHealth;
+        playerData = transform.parent.transform.parent.GetComponent<PlayerData>();
     }
 
     private void Update()
@@ -33,8 +30,8 @@ public class HealthBarHUD : MonoBehaviour
 
     public void SetHealthBar()
     {
-        //currentHealth = PlayerData.currentHealth;
-        //MaxHealth = PlayerData.maxHealth;
+        currentHealth = playerData.health;
+        maxHealth = playerData.maxHealth;
         HealthSlider.maxValue = maxHealth;
         HealthSlider.value = currentHealth;
     }

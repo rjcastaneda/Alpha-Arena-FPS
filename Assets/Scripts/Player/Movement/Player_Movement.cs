@@ -75,7 +75,7 @@ public class Player_Movement : MonoBehaviourPunCallbacks
     {
         // Initialize user
         PlayerTransform = transform;
-        PV = GetComponent<PhotonView>();
+        //PV = GetComponent<PhotonView>();
         Player = GetComponent<CharacterController>();
         playerScale = transform.localScale;
 
@@ -92,7 +92,7 @@ public class Player_Movement : MonoBehaviourPunCallbacks
     {
         // Update player states
         //Check to make sure you are not moving other players
-        if(!PV.IsMine && PhotonNetwork.IsConnected == true){
+        if(!photonView.IsMine && PhotonNetwork.IsConnected == true){
             return;
         }
 

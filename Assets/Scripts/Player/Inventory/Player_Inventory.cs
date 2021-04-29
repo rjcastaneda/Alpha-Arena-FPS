@@ -37,6 +37,8 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
     private Hashtable hash;
 
+    private PhotonPlayer photonPlayer;
+
     //debug
     LineRenderer lr;
 
@@ -266,6 +268,8 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
+                    hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
+
                     Debug.Log("Hit " + hit.collider.gameObject.name);
                     lr.enabled = true;
                     lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));

@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 [RequireComponent(typeof(CharacterController))]
-public class Player_Movement : MonoBehaviour
+public class Player_Movement : MonoBehaviourPun
 {
     // Class for applying different movement behaviors for ground, air, strafe
     [System.Serializable]

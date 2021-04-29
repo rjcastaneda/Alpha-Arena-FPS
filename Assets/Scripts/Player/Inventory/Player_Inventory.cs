@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-using ExitGames.Client.Photon;
-using Photon.Realtime;
 
 public class Player_Inventory : MonoBehaviourPunCallbacks
 {
@@ -113,6 +111,12 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             }
         }
         return -1;
+    }
+
+    public Weapon GetCurrentWeapon()
+    {
+        Weapon cw = inventory[itemIndex].GetComponent<Weapon>();
+        return cw;
     }
 
     public void PickUpItem(GameObject obj)

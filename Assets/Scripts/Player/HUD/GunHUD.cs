@@ -17,7 +17,7 @@ public class GunHUD : MonoBehaviour
 
     private TextMeshProUGUI AmmoText;
     private TextMeshProUGUI GunText;
-    
+    private Player_Inventory playerInventory;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,9 +33,9 @@ public class GunHUD : MonoBehaviour
 
     public void UpdateCurrentWeapon()
     {
-        //Need to integrate weapon data to the Gun Hud; 
-        //currentAmmo = Weapon.currentlyHeld.currentAmmo
-        //maxAmmo = Weapon.currentlyHeld.clipSize
+
+        currentAmmo = Weapon.currentlyHeld.currentAmmo;
+        maxAmmo = Weapon.currentlyHeld.clipSize;
         AmmoText.text = currentAmmo.ToString() + "/" + maxAmmo.ToString();
         GunText.text = GunName;
     }

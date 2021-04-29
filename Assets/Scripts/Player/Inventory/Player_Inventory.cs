@@ -261,16 +261,12 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
                 //Gross debug raycast stuff start
                 ////////////////////////////////
-                Debug.Log("Primary fire for " + cw.weaponName);
-
                 Ray ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
                 ray.origin = Camera.transform.position;
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
                     hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
-
-                    Debug.Log("Hit " + hit.collider.gameObject.name);
                     lr.enabled = true;
                     lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
                     lr.SetPosition(1, hit.point);

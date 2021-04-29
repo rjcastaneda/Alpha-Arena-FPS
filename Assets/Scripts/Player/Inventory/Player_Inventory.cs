@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -77,17 +78,53 @@ public class Player_Inventory : MonoBehaviour
         previousItemIndex = itemIndex;
     }
 
-    void PickUpItem(GameObject obj)
+    private int FindWeaponIndex(string wepName)
     {
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i].GetComponent<Weapon>().weaponName == wepName)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void PickUpItem(GameObject obj)
+    {
+        int wepIndex = FindWeaponIndex(obj.GetComponent<Weapon>().weaponName);
+        if (wepIndex != -1)
+        {
+            AddAmmoToWeapon(wepIndex, obj.GetComponent<Weapon>().magSize);
+            Debug.Log("Picked up ammo for " + obj.GetComponent<Weapon>().weaponName);
+            Destroy(obj);
+            return;
+        }
         obj.transform.SetParent(inventoryObject.transform);
         obj.transform.localPosition = Vector3.zero;
+        obj.transform.rotation = inventoryObject.transform.rotation;
 
         inventory.Add(obj);
+
+        Debug.Log("Picked up " + obj.GetComponent<Weapon>().weaponName);
+
+        obj.SetActive(false);
 
         if (AutoSwapNewWeapon)
         {
             EquipItem(inventory.Count - 1);
         }
+    }
+
+    private void AddAmmoToWeapon(int index, int amount)
+    {
+        Weapon WC = inventory[index].GetComponent<Weapon>();
+        if (WC.currentReserveAmmo + amount > WC.maxReserveAmmo)
+        {
+            WC.currentReserveAmmo = WC.maxReserveAmmo;
+        }
+        else
+            WC.currentReserveAmmo += amount;
     }
 
     void Update()
@@ -156,7 +193,7 @@ public class Player_Inventory : MonoBehaviour
 
         if (Input.GetKeyDown("r"))
         {
-            if (cw.currentAmmo != cw.magSize)
+            if ( (cw.currentAmmo != cw.magSize) & (cw.currentReserveAmmo != 0) & (reloadCoroutine == null) )
             {
                 Debug.Log("Starting reload for " + cw.weaponName);
                 if (cw.currentAmmo == 0)
@@ -223,14 +260,14 @@ public class Player_Inventory : MonoBehaviour
         Debug.Log("Reloaded " + cw.weaponName);
         if (cw.currentAmmo != cw.magSize)
         {
-            if (cw.magSize > cw.maxAmmo)
+            if (cw.magSize > cw.currentReserveAmmo)
             {
-                cw.currentAmmo = cw.maxAmmo;
-                cw.maxAmmo -= cw.maxAmmo;
+                cw.currentAmmo = cw.currentReserveAmmo;
+                cw.currentReserveAmmo -= cw.currentReserveAmmo;
             }
             else
             {
-                cw.maxAmmo -= (cw.magSize - cw.currentAmmo);
+                cw.currentReserveAmmo -= (cw.magSize - cw.currentAmmo);
                 cw.currentAmmo = cw.magSize;
             }
         }

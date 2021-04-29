@@ -91,7 +91,7 @@ public class Player_Movement : MonoBehaviourPunCallbacks
     private void Update()
     {
         // Update player states
-        if (PV.IsMine)
+        if (photonView.IsMine)
         {
             MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
             crouching = Input.GetButton("Crouch");

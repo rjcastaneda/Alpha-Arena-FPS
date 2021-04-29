@@ -107,7 +107,7 @@ RectTransform:
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0.00061035156, y: 0.0035438538}
   m_SizeDelta: {x: -0.000061035156, y: 0.02848816}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -404,7 +404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3076379213300468958
 RectTransform:
   m_ObjectHideFlags: 0
@@ -420,7 +420,7 @@ RectTransform:
   - {fileID: 7114495867898794040}
   - {fileID: 2755092877496806055}
   m_Father: {fileID: 3877158995854494152}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -436,7 +436,7 @@ Canvas:
   m_GameObject: {fileID: 2528162080884720533}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 5608244588167108645}
   m_PlaneDistance: 1
   m_PixelPerfect: 0
@@ -557,10 +557,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1.0000002, z: 1}
   m_Children:
+  - {fileID: 3076379213300468958}
   - {fileID: 3877158995854494154}
   - {fileID: 3877158995854494156}
   - {fileID: 5608244588167108647}
-  - {fileID: 3076379213300468958}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -785,7 +785,7 @@ Transform:
   m_Children:
   - {fileID: 3877158995854494194}
   m_Father: {fileID: 3877158995854494152}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3877158995854201900
 GameObject:
@@ -816,7 +816,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3877158995854494152}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &3877158995848927376
 SkinnedMeshRenderer:
@@ -3120,7 +3120,7 @@ Transform:
   m_Children:
   - {fileID: 6804072979343326003}
   m_Father: {fileID: 3877158995854494152}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &5608244588167108645
 Camera:
@@ -3225,7 +3225,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentAmmo: 0
   maxAmmo: 0
-  GunName: 
 --- !u!1 &7253852060879365825
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,6 @@ public class GunHUD : MonoBehaviour
 {
     public int currentAmmo;
     public int maxAmmo;
-    public string GunName;
 
     private TextMeshProUGUI AmmoText;
     private TextMeshProUGUI GunText;
@@ -23,6 +22,7 @@ public class GunHUD : MonoBehaviour
     {
         AmmoText = transform.Find("Ammo(TMP)").gameObject.GetComponent<TextMeshProUGUI>();
         GunText = transform.Find("GunName(TMP)").gameObject.GetComponent<TextMeshProUGUI>();
+        playerInventory = transform.parent.transform.parent.GetComponent<Player_Inventory>();
     }
 
     // Update is called once per frame
@@ -33,10 +33,10 @@ public class GunHUD : MonoBehaviour
 
     public void UpdateCurrentWeapon()
     {
-
-        currentAmmo = Weapon.currentlyHeld.currentAmmo;
-        maxAmmo = Weapon.currentlyHeld.clipSize;
+        Weapon cw = playerInventory.GetCurrentWeapon();
+        currentAmmo = cw.currentAmmo;
+        maxAmmo = cw.magSize;
         AmmoText.text = currentAmmo.ToString() + "/" + maxAmmo.ToString();
-        GunText.text = GunName;
+        GunText.text = cw.weaponName;
     }
 }

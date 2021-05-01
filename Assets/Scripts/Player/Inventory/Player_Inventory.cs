@@ -263,20 +263,23 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
                 nextFire = Time.time;
                 nextFire += cw.rateOfFire;
 
-                //Gross debug raycast stuff start
-                ////////////////////////////////
                 Ray ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
                 ray.origin = Camera.transform.position;
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
+                    //Check so you can't shoot yourself
+                    if (hit.collider.gameObject.GetComponent<PhotonView>() && !hit.collider.gameObject.GetComponent<PhotonView>().IsMine)
+                    {
+                        hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
+                    }
+                    
+                    //DEBUGGING!!!
                     lr.enabled = true;
                     lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
                     lr.SetPosition(1, hit.point);
+                    //DEBUGGING!!!
                 }
-                ////////////////////////////////
-                //Gross debug raycast stuff end
 
                 cw.currentAmmo -= 1;
 

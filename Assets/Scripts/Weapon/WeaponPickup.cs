@@ -1,9 +1,10 @@
 ﻿using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
-public class WeaponPickup : MonoBehaviourPunCallbacks
+public class WeaponPickup : MonoBehaviourPun
 {
     [Tooltip("The weapon that this pickup grants.")]
     [SerializeField] GameObject weaponPickup;
@@ -16,25 +17,21 @@ public class WeaponPickup : MonoBehaviourPunCallbacks
 
     private GameObject displayPoint;
     private GameObject weapon;
-    private string weaponName;
+    private bool weaponActive;
 
     private Coroutine spawnRoutine = null;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            return;
-        }
         displayPoint = transform.Find("DisplayPoint").gameObject;
-        weapon = PhotonNetwork.Instantiate(weaponPickup.GetComponent<Weapon>().weaponName, displayPoint.transform.position, Quaternion.identity, 0);
-        weaponName = weaponPickup.GetComponent<Weapon>().weaponName;
 
+        weapon = Instantiate(weaponPickup);
+          
         weapon.transform.SetParent(displayPoint.transform);
         weapon.transform.localPosition = Vector3.zero;
 
-        if (!startSpawned)
+        if (!startSpawned && PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, false);
         }
@@ -48,7 +45,7 @@ public class WeaponPickup : MonoBehaviourPunCallbacks
         {
             return;
         }
-        if ((spawnRoutine == null) & (!weapon.gameObject.activeSelf))
+        if ((spawnRoutine == null) & (!weaponActive))
         {
             spawnRoutine = StartCoroutine(RespawnPickup(spawnTime));
         }
@@ -67,14 +64,10 @@ public class WeaponPickup : MonoBehaviourPunCallbacks
         GameObject obj = other.gameObject;
         if (obj.tag == "Player")
         {
-            if (weapon.gameObject.activeSelf)
+            if (weaponActive && obj.GetComponent<PhotonView>().IsMine)
             {
                 obj.GetComponent<Player_Inventory>().PickUpItem(Instantiate(weaponPickup));
-
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, false);
-                }
+                photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, false);
             }
         }
     }
@@ -83,5 +76,6 @@ public class WeaponPickup : MonoBehaviourPunCallbacks
     void EnableDisableWeaponPickup(bool show)
     {
         weapon.SetActive(show);
+        weaponActive = show;
     }
 }

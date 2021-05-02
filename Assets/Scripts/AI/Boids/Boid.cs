@@ -29,8 +29,8 @@ public class Boid : MonoBehaviour
     private void Awake()
     {
         boidRB = this.gameObject.GetComponent<Rigidbody>();
-        AICont = GameObject.Find("AIController").GetComponent<AIController>();
-        attractor = GameObject.Find("Attractor").GetComponent<Attractor>();
+        AICont = transform.parent.GetComponent<AIController>();
+        attractor = transform.parent.parent.Find("BoidAttractor").GetComponent<Attractor>();
         NBHD = this.gameObject.GetComponent<Neighborhood>();
         boidPos = Random.onUnitSphere * AICont.spawnRadius;
         velocity = Random.onUnitSphere * AICont.spawnRadius;
@@ -133,5 +133,10 @@ public class Boid : MonoBehaviour
     //Function for boid to look at direction of their velocity.
     void LookAhead(){
         transform.LookAt(boidPos + boidRB.velocity);
+    }
+
+    public void die()
+    {
+        Destroy(this);
     }
 }

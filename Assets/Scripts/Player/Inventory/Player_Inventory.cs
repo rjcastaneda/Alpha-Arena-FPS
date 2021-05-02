@@ -63,7 +63,6 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
         gunHUD = transform.Find("PlayerHUD").transform.Find("GunHUD").GetComponent<GunHUD>();
 
-
         //debugging
         lr = gameObject.AddComponent<LineRenderer>();
         lr.useWorldSpace = true;

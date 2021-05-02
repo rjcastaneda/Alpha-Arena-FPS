@@ -21,7 +21,9 @@ public class Attractor : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other) {
-       rndLocation();
+        if(other.tag == "Player")
+        { return;  }
+        rndLocation();
     }
 
     //Function for the attractor to change to a random position

@@ -270,8 +270,8 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
                     hit.collider.gameObject.GetComponent<Boid>()?.die();
+                    hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
                     lr.enabled = true;
                     lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
                     lr.SetPosition(1, hit.point);

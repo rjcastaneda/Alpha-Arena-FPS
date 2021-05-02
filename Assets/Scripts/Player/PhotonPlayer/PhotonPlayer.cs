@@ -10,12 +10,14 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     PhotonView PV;
     PlayerData playerData;
     PlayerManager playerManager;
+    HealthBarHUD healthbarHUD;
 
     public void Awake()
     {
         PV = this.gameObject.GetComponent<PhotonView>();
         playerData = this.gameObject.GetComponent<PlayerData>();
         //playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+        healthbarHUD = transform.Find("PlayerHUD").transform.Find("HealthBar").GetComponent<HealthBarHUD>();
     }
 
     //Damage taken runs on shooter's view but data is sent to all
@@ -30,7 +32,9 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     void RPC_TakeDamage(float damage)
     {
         if (!PV.IsMine) { return; }
+
         playerData.health -= damage;
+        healthbarHUD.ShowDamageFeedback();
         Debug.Log("You took " + damage + " damage!");
 
         if(playerData.health <= 0)

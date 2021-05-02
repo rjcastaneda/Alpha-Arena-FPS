@@ -19,7 +19,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject StartingWeaponSecondary;
 
     [Tooltip("The game object/point that weapons attach to.")]
-    [SerializeField] private GameObject inventoryObject;    //TODO rename this
+    [SerializeField] private GameObject inventoryObject;
 
     [SerializeField] private List<GameObject> inventory = new List<GameObject>();
 
@@ -33,9 +33,9 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
     private Coroutine reloadCoroutine = null;
 
-    private Hashtable hash;
-
     private PhotonPlayer photonPlayer;
+
+    private GunHUD gunHUD;
 
     //debug
     LineRenderer lr;
@@ -60,6 +60,9 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         }
         else
             Debug.LogError("No primary or secondary starting weapon specified!");
+
+        gunHUD = transform.Find("PlayerHUD").transform.Find("GunHUD").GetComponent<GunHUD>();
+
 
         //debugging
         lr = gameObject.AddComponent<LineRenderer>();
@@ -272,6 +275,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
                     if (hit.collider.gameObject.GetComponent<PhotonView>() && !hit.collider.gameObject.GetComponent<PhotonView>().IsMine)
                     {
                         hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
+                        gunHUD.ShowHitmarker();
                     }
                     
                     //DEBUGGING!!!

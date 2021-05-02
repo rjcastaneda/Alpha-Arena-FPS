@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using System.IO;
 
-public class AIController : MonoBehaviour
+public class AIController : MonoBehaviourPunCallbacks
 {
     static public List<Boid> boids;
 
@@ -29,11 +31,13 @@ public class AIController : MonoBehaviour
 
     private void Awake()
     {
+        base.OnEnable();
         boids = new List<Boid>();
     }
 
-    private void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
         numSpawned = 0;
         InstantiateBoid();
     }
@@ -41,7 +45,7 @@ public class AIController : MonoBehaviour
     //Function to spawn boids into the scene.
     public void InstantiateBoid()
     {
-        GameObject boidGO = Instantiate(boidPreFab);
+        GameObject boidGO = PhotonNetwork.InstantiateRoomObject(Path.Combine("Prefabs","Boid"), transform.position, transform.rotation);
         Boid boid = boidGO.GetComponent<Boid>();
         boid.transform.SetParent(boidAnchor);
         boids.Add(boid);

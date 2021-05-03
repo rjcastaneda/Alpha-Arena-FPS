@@ -18,6 +18,12 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
         playerData = this.gameObject.GetComponent<PlayerData>();
         //playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         healthbarHUD = transform.Find("PlayerHUD").transform.Find("HealthBar").GetComponent<HealthBarHUD>();
+
+        //Hide player model in first person view
+        if (PV.IsMine)
+        {
+            transform.Find("MaleDummy_Mesh").GetComponent<SkinnedMeshRenderer>().enabled = false;
+        }
     }
 
     //Damage taken runs on shooter's view but data is sent to all

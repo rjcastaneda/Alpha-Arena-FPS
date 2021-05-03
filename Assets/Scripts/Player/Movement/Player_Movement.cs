@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 [RequireComponent(typeof(CharacterController))]
 public class Player_Movement : MonoBehaviourPunCallbacks
@@ -71,6 +72,8 @@ public class Player_Movement : MonoBehaviourPunCallbacks
 
     private PhotonView PV;
 
+    private Animator playerAnimator;
+
     private void Start()
     {
         // Initialize user
@@ -78,6 +81,7 @@ public class Player_Movement : MonoBehaviourPunCallbacks
         //PV = GetComponent<PhotonView>();
         Player = GetComponent<CharacterController>();
         playerScale = transform.localScale;
+        playerAnimator = GetComponent<Animator>();
 
         if (!Camera)
         {
@@ -259,6 +263,8 @@ public class Player_Movement : MonoBehaviourPunCallbacks
             PlayerVelocity.y = JumpForce;
             IsJumpQueued = false;
         }
+
+        playerAnimator.SetFloat("Speed", Math.Abs(PlayerVelocity.x + PlayerVelocity.z));
     }
 
     private void ApplyFriction(float mult)

@@ -3,35 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+[ExecuteInEditMode]
 public class PGCTerrain : MonoBehaviour
 {
-    // Initialize all values for procedurally generated terrain
-    public Terrain Terrain;
-    public TerrainData TerrainData;
-    public float[,] HeightMap;
-    private int XSize, ZSize;
+    public Terrain terrain;
+    public TerrainData terrainData;
+    public float[,] heightMap;
+    int xSize, zSize;
 
-    public float PerlinMTHi;
-    public float PerlinMTLow;
-    public int PerlinTileSize;
+    //For Perlin Functions
+    public float perlinMTHi;
+    public float perlinMTLow;
+    public int perlinTileSize;
 
+    //For MultiPerlinFunctions
     public float mPerlinAmp;
     public float mPerlinFreq;
     public float mPerlinPersistence;
     public float mPerlinLacunarity;
     public int mPerlinOctaves;
 
-    public int Time;
-    public float Amplitude;
-    public float Wavelength;
+    //For Trig Functions
+    public int time;
+    public float amplitude;
+    public float wavelength;
 
-    private void OnEnable()
+    void OnEnable()
     {
-        // Setup default variables on enable
-        Terrain = this.GetComponent<Terrain>();
-        TerrainData = Terrain.terrainData;
-        XSize = (int)TerrainData.size.x;
-        ZSize = (int)TerrainData.size.z;
+        terrain = this.gameObject.GetComponent<Terrain>();
+        terrainData = terrain.terrainData;
+        xSize = (int)terrainData.size.x;
+        zSize = (int)terrainData.size.z;
 
         SetDefaultsPerlin();
         SetDefaultsTrig();
@@ -40,132 +42,117 @@ public class PGCTerrain : MonoBehaviour
 
     public void SetDefaultsPerlin()
     {
-        PerlinMTHi = 10.0f;
-        PerlinMTLow = -100.0f;
-        PerlinTileSize = 5;
-    }
-
-    public void SetDefaultsTrig()
-    {
-        Time = 1;
-        Amplitude = 1.0f;
-        Wavelength = 1.0f;
+        perlinMTHi = 10.0f;
+        perlinMTLow = -100.0f;
+        perlinTileSize = 1;
     }
 
     public void SetDefaultsMPerlin()
     {
-        mPerlinAmp = 0.1f;
-        mPerlinFreq = 1.0f;
-        mPerlinPersistence = 0.1f;
-        mPerlinLacunarity = 1.0f;
-        mPerlinOctaves = 1;
+      mPerlinAmp = 0.1f;
+      mPerlinFreq = 1.0f;
+      mPerlinPersistence = 0.1f;
+      mPerlinLacunarity = 1.0f;
+      mPerlinOctaves = 1;
     }
 
-    public void TrigTerrain()
+    public void SetDefaultsTrig()
     {
-        // Initialize variables used to calculate terrain
-        float[,] newHeightMap = new float[TerrainData.detailWidth, TerrainData.detailHeight];
-        float heightMapRes = (float)Terrain.terrainData.heightmapResolution;
-        float mtHeight = Amplitude / (heightMapRes / 2.0f);
-        float baseHeight = 5.0f / (heightMapRes / 2.0f);
-
-        for (int x = 0; x < XSize; x++)
-        {
-            for (int z = 0; z < ZSize; z++)
-            {
-                // Math function that calculates terrain heights using sine
-                newHeightMap[x, z] = baseHeight + (mtHeight * (Mathf.Sin((float)Mathf.PI * 2.0f * ((float)x / (float)XSize) * Time / Wavelength)));
-            }
-        }
-
-        // Apply calculated terrain data
-        TerrainData.SetHeights(0, 0, newHeightMap);
+        time = 1;
+        amplitude = 1.0f;
+        wavelength = 1.0f;
     }
 
     public void ResetTerrain()
     {
-        float[,] newHeightMap = new float[TerrainData.detailWidth, TerrainData.detailHeight];
+        float[,] newHeightMap = new float[terrainData.detailWidth, terrainData.detailHeight];
+        for (int x = 0; x < xSize; x++)
+            for (int z = 0; z < zSize; z++) 
+            { newHeightMap[x, z] = 0; }
+        terrainData.SetHeights(0, 0, newHeightMap);
+    }
 
-        for (int x = 0; x < XSize; x++)
-        {
-            for (int z = 0; z < ZSize; z++)
+    public void TrigTerrain()
+    {
+        float[,] newHeightMap = new float[terrainData.detailWidth, terrainData.detailHeight];
+        float heightMapRes = (float)terrain.terrainData.heightmapResolution;
+        float mtHeight = amplitude / (heightMapRes / 2.0f);
+        float baseHeight = 5.0f / (heightMapRes / 2.0f);
+        for (int x = 0; x < xSize; x++)
+            for (int z = 0; z < zSize; z++)
             {
-                // Set every x and z to zero
-                newHeightMap[x, z] = 0;
-            }
-        }
+                newHeightMap[x, z] = baseHeight + (mtHeight * (Mathf.Sin((float) Mathf.PI * 2.0f * ((float) x / (float) xSize) * time / wavelength)));               
+            }                                     
 
-        // Apply calculated terrain data
-        TerrainData.SetHeights(0, 0, newHeightMap);
+       terrainData.SetHeights(0, 0, newHeightMap);
     }
 
     public void PerlinNoiseTerrain()
     {
-        // Initialize variables used to calculate terrain
-        float[,] newHeightMap = new float[TerrainData.detailWidth, TerrainData.detailHeight];
-        float heightMapRes = (float)TerrainData.heightmapResolution;
-        float mtHeight = (PerlinMTHi - PerlinMTLow) / (heightMapRes / 2.0f);
-        float baseHeight = 5.0f / (heightMapRes / 2.0f);
+        //Calculations and initialization of height related variables
+        float[,] newHeightMap = new float[terrainData.detailWidth, terrainData.detailHeight];
+        float heightMapRes = (float)terrain.terrainData.heightmapResolution;
+        float mtHeight = (perlinMTHi - perlinMTLow) / ( heightMapRes / 2.0f);
+        float baseHeight = 5.0f / (heightMapRes / 2);
 
-        for (int x = 0; x < XSize; x++)
-        {
-            for (int z = 0; z < ZSize; z++)
+        for(int x = 0; x < xSize; x++)
+            for(int z = 0; z < zSize; z++)
             {
-                // Math function that calculates terrain using Unity implemented Perlin Noise
-                newHeightMap[x, z] = baseHeight + (Mathf.PerlinNoise(((float)x / (float)XSize) * PerlinTileSize, ((float)z / (float)ZSize * PerlinTileSize) * mtHeight));
+                newHeightMap[x, z] = baseHeight + (Mathf.PerlinNoise(((float)x / (float)xSize) * perlinTileSize, ((float)z / (float)zSize * perlinTileSize) * mtHeight));
             }
-        }
 
-        // Apply calculated terrain data
-        TerrainData.SetHeights(0, 0, newHeightMap);
+        terrainData.SetHeights(0, 0, newHeightMap);
     }
 
     public void MultiPerlinTerrain()
     {
-        // Initialize variables used to calculate terrain
-        float[,] newHeightMap = new float[TerrainData.detailWidth, TerrainData.detailHeight];
-        float heightMapRes = (float)TerrainData.heightmapResolution;
-        float baseHeight = 5.0f / (heightMapRes / 2.0f);
+        //Calculations and initialization of height related variables
+        float[,] newHeightMap = new float[terrainData.detailWidth, terrainData.detailHeight];
+        float heightMapRes = (float)terrain.terrainData.heightmapResolution;
+        float baseHeight = 5.0f / (heightMapRes / 2);
         float noiseVal;
         float heightVal;
 
+        //Array of values of the octaves.
         float[] octaves = new float[mPerlinOctaves];
 
+        //Variables to help calculate for each octave
         float amplitude;
         float frequency;
         float persistence;
+       
 
-        for (int x = 0; x < XSize; x++)
-        {
-            for (int z = 0; z < ZSize; z++)
+        for (int x = 0; x < xSize; x++)
+            for (int z = 0; z < zSize; z++)
             {
-                // Reset values for every z
+                //Set variables back to default for next (x,z)
                 amplitude = mPerlinAmp;
                 frequency = mPerlinFreq;
                 persistence = mPerlinPersistence;
                 heightVal = 0.0f;
 
+                //We calculate the values of all octaves for particuler (x,z)
                 for (int n = 0; n < mPerlinOctaves; n++)
                 {
-                    // Apply multiple perlin noises per every perlin octave allocated
-                    noiseVal = Mathf.PerlinNoise(((float)x / (float)XSize) * frequency, ((float)z / (float)ZSize) * frequency);
+                    
+                    noiseVal = Mathf.PerlinNoise(((float)x / (float)xSize) * frequency, ((float)z / (float)zSize) * frequency);
                     octaves[n] = noiseVal * amplitude;
+                    //octaves[n] -= superpositionCompensation;
 
+                    //Calculations of persistence and lacunarity for next octave.
                     amplitude *= persistence;
                     frequency *= mPerlinLacunarity;
+
                 }
 
-                // Sum of all perlin octaves
-                for (int v = 0; v < mPerlinOctaves; v++)
-                {
-                    heightVal += octaves[v];
-                }
+                //Sum up all the octave values
+                for(int v = 0; v < mPerlinOctaves; v++) { heightVal += octaves[v]; }
 
-                // Apply calculated terrain data
                 newHeightMap[x, z] = baseHeight + Mathf.Clamp(heightVal, 0.0f, 1.0f);
             }
-        }
 
-        TerrainData.SetHeights(0, 0, newHeightMap);
+        
+
+        terrainData.SetHeights(0, 0, newHeightMap);
     }
 }

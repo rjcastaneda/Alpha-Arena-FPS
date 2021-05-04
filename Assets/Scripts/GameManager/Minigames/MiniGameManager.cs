@@ -5,10 +5,11 @@ using Photon.Pun;
 
 public class MiniGameManager : MonoBehaviourPunCallbacks
 {
-    private List<GameObject> MGRooms;
-    private List<MiniGameRoom> MGRoomScript;
+    [SerializeField]private List<GameObject> MGRooms;
+    [SerializeField]private List<MiniGameRoom> MGRoomScript;
     private Transform MGRoomContainer;
 
+    private BuffsManager buffsManager;
 
     // Start is called before the first frame update
     void Start()
@@ -22,10 +23,38 @@ public class MiniGameManager : MonoBehaviourPunCallbacks
     }
 
 
-
-    // Update is called once per frame
-    void Update()
+    public void EnterRoom(int RoomID, GameObject Player)
     {
-        
+        int idx = 0;
+        for(int x = 0; x < MGRoomScript.Count; x++)
+        {
+            if(MGRoomScript[x].ID == RoomID)
+            {
+                idx = x;
+                break;
+            }
+        }
+
+        Transform spawnpoint = MGRooms[idx].transform.Find("PlayerSpawn").transform;
+        Player.transform.position = spawnpoint.position;
+        MGRoomScript[idx].isOccupied = true;
     }
+
+    public void ExitRoom(int RoomID)
+    {
+
+    }
+
+    public int FindAvailableRoom()
+    {
+        foreach(MiniGameRoom room in MGRoomScript)
+        {
+            if(!room.isOccupied){
+                return room.ID;
+            }
+        }
+
+        return -1;
+    }
+    
 }

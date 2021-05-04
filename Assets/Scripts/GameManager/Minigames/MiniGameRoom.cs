@@ -5,6 +5,7 @@ using Photon.Pun;
 
 public class MiniGameRoom : MonoBehaviourPunCallbacks
 {
+    public int ID;
     public bool isOccupied;
 
     //Pun2 synchronization

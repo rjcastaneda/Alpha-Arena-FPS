@@ -9,20 +9,21 @@ public class Obelisk : MonoBehaviourPunCallbacks
     public float cooldown;
     public bool ready;
 
-    private MiniGameManager miniGameManager;
-
-    public void enterMinigame()
-    {
-        cooldown = timeDelay;
-        ready = false;
-    }
+    [SerializeField] private MiniGameManager miniGameManager;
 
     private void Start()
     {
-        miniGameManager = GameObject.Find("GameManager").GetComponent<MiniGameManager>();
-
         ready = false;
         cooldown = timeDelay;
+        miniGameManager = GameObject.Find("GameManager").GetComponent<MiniGameManager>();
+    }
+
+    public void enterRoom(GameObject Player)
+    {
+        cooldown = timeDelay;
+        ready = false;
+        int Room = miniGameManager.FindAvailableRoom();
+        miniGameManager.EnterRoom(Room, Player);
     }
 
     void checkCooldown()
@@ -47,10 +48,10 @@ public class Obelisk : MonoBehaviourPunCallbacks
     {
         if(other.tag == "Player")
         {   
-            if(ready)
-            {
-                other.gameObject.transform.Find("PlayerHUD");
-                //Enable option that when you press e you enter arena;
+            if(ready){
+               MiniGameIndicator MGOther = other.gameObject.GetComponent<MiniGameIndicator>();
+               MGOther.enabled = true;
+               MGOther.crntObelisk = this;
             }
         }
     }
@@ -59,8 +60,9 @@ public class Obelisk : MonoBehaviourPunCallbacks
     {
         if (other.tag == "Player")
         {
-              other.gameObject.transform.Find("PlayerHUD");
-              //disable Hud once you exit area
+            MiniGameIndicator MGOther = other.gameObject.GetComponent<MiniGameIndicator>();
+            MGOther.enabled = false;
+            MGOther.crntObelisk = null;
         }
     }
 

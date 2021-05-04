@@ -135,9 +135,17 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             Destroy(obj);
             return;
         }
-        obj.transform.SetParent(inventoryObject.transform);
-        obj.transform.localPosition = Vector3.zero;
+        obj.transform.SetParent(inventoryObject.transform); //Parent the weapon to our inventory object
+        obj.transform.localPosition = obj.GetComponent<Weapon>().offsetVector;  //Offset the viewmodel accordingly
         obj.transform.rotation = inventoryObject.transform.rotation;
+
+        //Disable shadow casting for first person weapons
+        if (obj.transform.Find("Object"))
+        {
+            obj.transform.Find("Object").GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;   
+        }
+        else
+            Debug.Log(obj + " does not have a child named Object!");
 
         //Enable viewmodel arms for first person
         if (obj.transform.Find("Viewmodel"))
@@ -145,7 +153,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             obj.transform.Find("Viewmodel").gameObject.SetActive(true);
         }
         else
-            Debug.Log(obj + " does not have a viewmodel object!");
+            Debug.Log(obj + " does not have child named Viewmodel!");
 
         inventory.Add(obj);
 

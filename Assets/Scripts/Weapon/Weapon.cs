@@ -43,4 +43,8 @@ public class Weapon : MonoBehaviour
 
     [Tooltip("Sound used for the alternate attack.")]
     public AudioClip alternateFireSound;
+
+    [Header("Weapon Offset")]
+    [Tooltip("Position of the weapon viewmodel relative to the camera.")]
+    public Vector3 offsetVector;
 }

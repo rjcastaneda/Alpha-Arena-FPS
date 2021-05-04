@@ -45,4 +45,8 @@ public class PlayerHud : MonoBehaviour
 
     }
 
+    void Gameover()
+    {
+        //load the score screen
+    }
 }

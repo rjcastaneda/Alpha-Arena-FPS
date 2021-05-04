@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerHud : MonoBehaviour
 {
     public Text timeText;
-    public float timeRemaining = 90;
+    public float timeRemaining = 120;
     public bool timerIsRunning = false;
    
     void Start()

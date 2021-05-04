@@ -152,19 +152,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 856f461d95ba50f43a96e3342fe58d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Terrain: {fileID: 0}
-  TerrainData: {fileID: 0}
-  PerlinMTHi: 10
-  PerlinMTLow: -100
-  PerlinTileSize: 5
-  mPerlinAmp: 0.1
-  mPerlinFreq: 1
-  mPerlinPersistence: 0.1
-  mPerlinLacunarity: 1
-  mPerlinOctaves: 1
-  Time: 1
-  Amplitude: 1
-  Wavelength: 1
+  terrain: {fileID: 1063612825}
+  terrainData: {fileID: 15600000, guid: 9d1ea2d6934d45349ad53e4be77a8f1c, type: 2}
+  perlinMTHi: 20
+  perlinMTLow: -40.4
+  perlinTileSize: 14
+  mPerlinAmp: 0.168
+  mPerlinFreq: 2.91
+  mPerlinPersistence: 0.868
+  mPerlinLacunarity: 1.765
+  mPerlinOctaves: 3
+  time: 1
+  amplitude: 1
+  wavelength: 1
 --- !u!154 &1063612824
 TerrainCollider:
   m_ObjectHideFlags: 0

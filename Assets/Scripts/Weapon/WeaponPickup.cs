@@ -15,6 +15,8 @@ public class WeaponPickup : MonoBehaviourPun
     [Tooltip("The time it takes for this pickup to respawn once it is grabbed.")]
     [SerializeField] int spawnTime;
 
+    [SerializeField] AudioClip pickupSound;
+
     private GameObject displayPoint;
     private GameObject weapon;
     private bool weaponActive;
@@ -31,10 +33,16 @@ public class WeaponPickup : MonoBehaviourPun
         weapon.transform.SetParent(displayPoint.transform);
         weapon.transform.localPosition = Vector3.zero;
 
-        if (!startSpawned && PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, false);
+            if (!startSpawned)
+            {
+                photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, false);
+            }
+            else
+                photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, true);
         }
+
 
     }
 
@@ -67,6 +75,7 @@ public class WeaponPickup : MonoBehaviourPun
             if (weaponActive && obj.GetComponent<PhotonView>().IsMine)
             {
                 obj.GetComponent<Player_Inventory>().PickUpItem(Instantiate(weaponPickup));
+                GetComponent<AudioSource>().PlayOneShot(pickupSound);
                 photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, false);
             }
         }

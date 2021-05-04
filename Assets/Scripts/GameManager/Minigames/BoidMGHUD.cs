@@ -4,18 +4,22 @@ using UnityEngine;
 using Photon.Pun;
 
 //Script that is placed on player.
-public class BoidHUD : MonoBehaviourPun
+public class BoidMGHUD : MonoBehaviourPun
 {
-    //This is placed on the player
-    // Start is called before the first frame update
-    void Start()
+    private GameObject boidHUD;
+
+    private void OnEnable()
     {
-        
+        boidHUD.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        boidHUD.SetActive(false);
+    }
+
+    void Start()
+    {
+        boidHUD = transform.Find("PlayerHUD").transform.Find("BoidHUD").gameObject;
     }
 }

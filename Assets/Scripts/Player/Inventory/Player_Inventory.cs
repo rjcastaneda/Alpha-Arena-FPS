@@ -139,6 +139,14 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         obj.transform.localPosition = Vector3.zero;
         obj.transform.rotation = inventoryObject.transform.rotation;
 
+        //Enable viewmodel arms for first person
+        if (obj.transform.Find("Viewmodel"))
+        {
+            obj.transform.Find("Viewmodel").gameObject.SetActive(true);
+        }
+        else
+            Debug.Log(obj + " does not have a viewmodel object!");
+
         inventory.Add(obj);
 
         Debug.Log("Picked up " + obj.GetComponent<Weapon>().weaponName);

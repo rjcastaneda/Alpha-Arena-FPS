@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class PGCTerrain : MonoBehaviour
 {
@@ -27,10 +28,10 @@ public class PGCTerrain : MonoBehaviour
     private void OnEnable()
     {
         // Setup default variables on enable
-        Terrain = this.gameObject.GetComponent<Terrain>();
+        Terrain = this.GetComponent<Terrain>();
         TerrainData = Terrain.terrainData;
-        XSize = (int)Terrain.terrainData.size.x;
-        ZSize = (int)Terrain.terrainData.size.z;
+        XSize = (int)TerrainData.size.x;
+        ZSize = (int)TerrainData.size.z;
 
         SetDefaultsPerlin();
         SetDefaultsTrig();

@@ -342,8 +342,9 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             }
         }
         reloadCoroutine = null;
-        lerpCoroutine = StartCoroutine(TransformWithLerp(inventoryObject.transform.localPosition, inventoryObjectPos, 0.3f));
-        nextFire = Time.time + 0.3f;
+        //lerpCoroutine = StartCoroutine(TransformWithLerp(inventoryObject.transform.localPosition, inventoryObjectPos, 0.3f));
+        //nextFire = Time.time + 0.3f;
+        inventoryObject.transform.localPosition = inventoryObjectPos;
     }
 
     IEnumerator ReloadWeapon(float time)

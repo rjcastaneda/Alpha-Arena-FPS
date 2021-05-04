@@ -16,7 +16,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
     {
         PV = this.gameObject.GetComponent<PhotonView>();
         playerData = this.gameObject.GetComponent<PlayerData>();
-        //playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+        playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         healthbarHUD = transform.Find("PlayerHUD").transform.Find("HealthBar").GetComponent<HealthBarHUD>();
 
         //Hide player model in first person view
@@ -45,7 +45,7 @@ public class PhotonPlayer : MonoBehaviourPunCallbacks
 
         if(playerData.health <= 0)
         {
-            //playerManager.PlayerDeath();
+            playerManager.PlayerDeath();
             Debug.Log("You're dead!");
         }
     }

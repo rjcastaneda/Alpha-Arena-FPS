@@ -334,23 +334,17 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         Debug.Log("Reloaded " + cw.weaponName);
         if (cw.currentAmmo != cw.magSize)
         {
-            if (cw.magSize > cw.currentReserveAmmo)
+            int addedAmmo = Mathf.Clamp(cw.currentReserveAmmo, 0, cw.magSize - cw.currentAmmo);
+            cw.currentAmmo += addedAmmo;
+            if (!cw.infiniteReserveAmmo)
             {
-                cw.currentAmmo = cw.currentReserveAmmo;
-                cw.currentReserveAmmo -= cw.currentReserveAmmo;
-            }
-            else
-            {
-                if (!cw.infiniteReserveAmmo)
-                {
-                    cw.currentReserveAmmo -= (cw.magSize - cw.currentAmmo);
-                }
-                cw.currentAmmo = cw.magSize;
+                cw.currentReserveAmmo -= addedAmmo;
             }
         }
         reloadCoroutine = null;
-        lerpCoroutine = StartCoroutine(TransformWithLerp(inventoryObject.transform.localPosition, inventoryObjectPos, 0.3f));
-        nextFire = Time.time + 0.3f;
+        //lerpCoroutine = StartCoroutine(TransformWithLerp(inventoryObject.transform.localPosition, inventoryObjectPos, 0.3f));
+        //nextFire = Time.time + 0.3f;
+        inventoryObject.transform.localPosition = inventoryObjectPos;
     }
 
     IEnumerator ReloadWeapon(float time)

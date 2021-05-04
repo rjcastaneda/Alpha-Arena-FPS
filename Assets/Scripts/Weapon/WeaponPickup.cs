@@ -31,10 +31,16 @@ public class WeaponPickup : MonoBehaviourPun
         weapon.transform.SetParent(displayPoint.transform);
         weapon.transform.localPosition = Vector3.zero;
 
-        if (!startSpawned && PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, false);
+            if (!startSpawned)
+            {
+                photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, false);
+            }
+            else
+                photonView.RPC("EnableDisableWeaponPickup", RpcTarget.All, true);
         }
+
 
     }
 

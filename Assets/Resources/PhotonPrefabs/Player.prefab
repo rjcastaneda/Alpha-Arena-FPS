@@ -918,8 +918,7 @@ MonoBehaviour:
   AutoSwapNewWeapon: 0
   StartingWeaponPrimary: {fileID: 8838719675263001572, guid: b4df0faa998d2494ca97b3b9223ee9fb,
     type: 3}
-  StartingWeaponSecondary: {fileID: 7731280652850974693, guid: 02c5120e557fe964f9ef5e92f550a340,
-    type: 3}
+  StartingWeaponSecondary: {fileID: 0}
   inventoryObject: {fileID: 2108983155433888844}
   inventory: []
   Camera: {fileID: 5608244588167108645}

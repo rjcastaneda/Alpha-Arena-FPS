@@ -118,6 +118,12 @@ public class Player_Movement : MonoBehaviour
         Player.Move(PlayerVelocity * Time.deltaTime);
     }
 
+    public Vector3 JumpPad(float force)
+    {
+        PlayerVelocity.y = force;
+        return PlayerVelocity;
+    }
+
     private void QueueJump()
     {
         // Handles jumping. If we want to turn on auto bunny hopping, that is also settled here

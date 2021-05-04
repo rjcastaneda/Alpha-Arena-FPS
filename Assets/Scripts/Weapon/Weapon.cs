@@ -50,4 +50,7 @@ public class Weapon : MonoBehaviour
     [Header("Weapon Offset")]
     [Tooltip("Position of the weapon viewmodel relative to the camera.")]
     public Vector3 offsetVector;
+
+    [Tooltip("Used for tracking rate of fire. Do not touch!")]
+    public float nextFire;
 }

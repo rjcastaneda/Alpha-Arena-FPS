@@ -17,6 +17,9 @@ public class GunHUD : MonoBehaviour
     private TextMeshProUGUI AmmoText;
     private TextMeshProUGUI GunText;
     private Player_Inventory playerInventory;
+    public Image hitmarker;
+
+    private Coroutine hitmarkerRoutine;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,5 +41,24 @@ public class GunHUD : MonoBehaviour
         maxAmmo = cw.currentReserveAmmo;
         AmmoText.text = currentAmmo.ToString() + "/" + maxAmmo.ToString();
         GunText.text = cw.weaponName;
+    }
+
+    public void ShowHitmarker()
+    {
+        if (hitmarkerRoutine != null)
+        {
+            StopCoroutine(hitmarkerRoutine);
+        }
+        hitmarkerRoutine = StartCoroutine(FadeHitmarker(2.0f));
+    }
+
+    private IEnumerator FadeHitmarker(float speed)
+    {
+        hitmarker.color = new Color(hitmarker.color.r, hitmarker.color.g, hitmarker.color.b, 1);
+        while (hitmarker.color.a > 0.0f)
+        {
+            hitmarker.color = new Color(hitmarker.color.r, hitmarker.color.g, hitmarker.color.b, hitmarker.color.a - (Time.deltaTime * speed));
+            yield return null;
+        }
     }
 }

@@ -40,7 +40,18 @@ public class MiniGameManager : MonoBehaviourPunCallbacks
         MGRoomScript[idx].isOccupied = true;
     }
 
-    public void ExitRoom(int RoomID)
+    public void ExitRoom(int RoomID, GameObject Player)
+    {
+        //Get spawnpoint
+        //Spawn player there
+    }
+
+    public void FailedGame()
+    {
+
+    }
+
+    public void WonGame()
     {
 
     }

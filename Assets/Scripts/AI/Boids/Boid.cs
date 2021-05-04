@@ -25,13 +25,23 @@ public class Boid : MonoBehaviour
     private AIController AICont;
     private Attractor attractor;
     private Neighborhood NBHD;
+    private BoidsMinigameManager boidsMiniGameManager;
 
     private void Awake()
     {
         boidRB = this.gameObject.GetComponent<Rigidbody>();
         AICont = transform.parent.GetComponent<AIController>();
         attractor = transform.parent.parent.Find("BoidAttractor").GetComponent<Attractor>();
+        boidsMiniGameManager = transform.parent.parent.GetComponent<BoidsMinigameManager>();
         NBHD = this.gameObject.GetComponent<Neighborhood>();
+        boidPos = Random.onUnitSphere * AICont.spawnRadius;
+        velocity = Random.onUnitSphere * AICont.spawnRadius;
+        boidRB.velocity = velocity;
+        LookAhead();
+    }
+
+    private void OnEnable()
+    {
         boidPos = Random.onUnitSphere * AICont.spawnRadius;
         velocity = Random.onUnitSphere * AICont.spawnRadius;
         boidRB.velocity = velocity;
@@ -137,6 +147,8 @@ public class Boid : MonoBehaviour
 
     public void die()
     {
-        Destroy(this);
+        //Call
+        this.gameObject.SetActive(false);
+        this.enabled = false;
     }
 }

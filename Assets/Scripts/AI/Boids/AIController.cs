@@ -8,6 +8,7 @@ using System.IO;
 public class AIController : MonoBehaviourPunCallbacks
 {
     static public List<Boid> boids;
+    static public List<GameObject> boidPool;
 
     [Header("Spawn Settings")]
     public GameObject boidPreFab;
@@ -31,15 +32,32 @@ public class AIController : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        base.OnEnable();
         boids = new List<Boid>();
+        numSpawned = 0;
+        InstantiateBoid();
     }
 
     public override void OnEnable()
     {
         base.OnEnable();
-        numSpawned = 0;
-        InstantiateBoid();
+        RenableBoids();
+    }
+
+    public void RenableBoids()
+    {
+        foreach (Boid boid in boids)
+        {
+            boid.enabled = true;
+        }
+
+        foreach (GameObject boid in boidPool)
+        {
+            boid.transform.position = transform.position;
+            boid.transform.rotation = transform.rotation;
+            boid.SetActive(true);
+        }
+        
+        
     }
 
     //Function to spawn boids into the scene.
@@ -49,6 +67,7 @@ public class AIController : MonoBehaviourPunCallbacks
         Boid boid = boidGO.GetComponent<Boid>();
         boid.transform.SetParent(boidAnchor);
         boids.Add(boid);
+        boidGO.SetActive(false);
         numSpawned++;
         while(numSpawned < numBoids)
         {

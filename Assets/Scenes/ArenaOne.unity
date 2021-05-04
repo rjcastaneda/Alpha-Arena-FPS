@@ -28035,7 +28035,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1211737773}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -34180,8 +34180,9 @@ GameObject:
   - component: {fileID: 1481523641}
   - component: {fileID: 1481523648}
   - component: {fileID: 1481523647}
+  - component: {fileID: 1481523649}
   m_Layer: 0
-  m_Name: AimLabsPlatform
+  m_Name: BoidMGPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34569,6 +34570,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   isOccupied: 0
+--- !u!65 &1481523649
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481523640}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 50, y: 30, z: 50}
+  m_Center: {x: 0, y: 15, z: 0}
 --- !u!43 &1482768571
 Mesh:
   m_ObjectHideFlags: 0

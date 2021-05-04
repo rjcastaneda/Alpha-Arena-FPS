@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using TMPro;
 
-//Script placed on player
+//Script placed on player, script is extension of Obelisk functionality
 public class MiniGameIndicator : MonoBehaviourPun
 {
     public Obelisk crntObelisk;

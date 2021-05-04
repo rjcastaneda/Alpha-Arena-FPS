@@ -23,7 +23,10 @@ public class Obelisk : MonoBehaviourPunCallbacks
         cooldown = timeDelay;
         ready = false;
         int Room = miniGameManager.FindAvailableRoom();
-        miniGameManager.EnterRoom(Room, Player);
+        if(Room != -1){
+            miniGameManager.EnterRoom(Room, Player);
+        }
+        
     }
 
     void checkCooldown()

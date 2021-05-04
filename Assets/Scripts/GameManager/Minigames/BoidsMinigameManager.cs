@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-//Script placed on BoidMGPlatform.
+//Script placed on BoidMGPlatform. Handles information about boids minigame
 public class BoidsMinigameManager : MonoBehaviourPunCallbacks
 {
     public float timer;
@@ -11,12 +11,17 @@ public class BoidsMinigameManager : MonoBehaviourPunCallbacks
     public float score;
     public float maxScore;
     public bool started;
+
+    private GameObject player;
     private AIController boidAIController;
     private MiniGameManager miniGameManager;
+    private MiniGameRoom thisRoom;
         
     private void Awake()
     {
         boidAIController = transform.Find("BoidController").GetComponent<AIController>();
+        miniGameManager = GameObject.Find("Game Manager").GetComponent<MiniGameManager>();
+        thisRoom = gameObject.GetComponent<MiniGameRoom>();
     }
 
 
@@ -26,6 +31,7 @@ public class BoidsMinigameManager : MonoBehaviourPunCallbacks
         {
             BoidMGHUD boidHud = other.gameObject.GetComponent<BoidMGHUD>();
             boidHud.enabled = true;
+            player = null;
         }
     }
 
@@ -35,6 +41,7 @@ public class BoidsMinigameManager : MonoBehaviourPunCallbacks
         {
             BoidMGHUD boidHud = other.gameObject.GetComponent<BoidMGHUD>();
             boidHud.enabled = false;
+            player = other.gameObject;
         }
     }
 
@@ -57,6 +64,7 @@ public class BoidsMinigameManager : MonoBehaviourPunCallbacks
         started = true;
     }
 
+    //function to decrement the timer and to check if the player won or lost the minigame.
     void CheckTimer()
     {
         if(timer > 0 && started){
@@ -67,22 +75,22 @@ public class BoidsMinigameManager : MonoBehaviourPunCallbacks
         {
             if(score == maxScore)
             {
-                miniGameManager.WonGame();
+                miniGameManager.WonGame(thisRoom.ID, player);
                 started = false;
             }
             else if(score != maxScore)
             {
-                miniGameManager.FailedGame();
+                miniGameManager.FailedGame(thisRoom.ID, player);
                 started = false;
             }
         }
     }
 
+    //Function to check if player completed game before timer.
     void CheckComplete()
     {
-        if(score == maxScore)
-        {
-            miniGameManager.WonGame();
+        if(score == maxScore){
+            miniGameManager.WonGame(thisRoom.ID, player);
         }
     }
 

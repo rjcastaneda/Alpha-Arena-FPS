@@ -1,12 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using Photon.Pun;
 
 //Script that is placed on player.
 public class BoidMGHUD : MonoBehaviourPun
 {
-    private GameObject boidHUD;
+
+    public GameObject boidHUD;
+    public BoidsMinigameManager crntManager;
+    public TextMeshProUGUI crntScore;
+    public TextMeshProUGUI maxScore;
+    public TextMeshProUGUI timeLeft;
+
+    void Start()
+    {
+        boidHUD = transform.Find("PlayerHUD").transform.Find("BoidHUD").gameObject;
+    }
 
     private void OnEnable()
     {
@@ -18,8 +29,10 @@ public class BoidMGHUD : MonoBehaviourPun
         boidHUD.SetActive(false);
     }
 
-    void Start()
+    void CheckText()
     {
-        boidHUD = transform.Find("PlayerHUD").transform.Find("BoidHUD").gameObject;
+        crntScore.text = crntManager.score.ToString();
+        maxScore.text = crntManager.score.ToString();
+        timeLeft.text = crntManager.timer.ToString();
     }
 }

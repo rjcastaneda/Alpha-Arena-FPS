@@ -30,7 +30,8 @@ public class BoidsMinigameManager : MonoBehaviourPunCallbacks
         if (other.tag == "Player")
         {
             BoidMGHUD boidHud = other.gameObject.GetComponent<BoidMGHUD>();
-            boidHud.enabled = true;
+            boidHud.enabled = false;
+            boidHud.crntManager = null;
             player = null;
         }
     }
@@ -40,7 +41,8 @@ public class BoidsMinigameManager : MonoBehaviourPunCallbacks
         if(other.tag == "Player")
         {
             BoidMGHUD boidHud = other.gameObject.GetComponent<BoidMGHUD>();
-            boidHud.enabled = false;
+            boidHud.enabled = true;
+            boidHud.crntManager = this;
             player = other.gameObject;
         }
     }

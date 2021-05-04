@@ -62,13 +62,13 @@ public class MiniGameManager : MonoBehaviourPunCallbacks
 
     public void FailedGame(int RoomID, GameObject Player)
     {
-        //Display Failure HUD
+        Player.transform.Find("GameFailed").GetComponent<MGTextHUD>().EnableText();
         ExitRoom(RoomID, Player);
     }
 
     public void WonGame(int RoomID, GameObject Player)
     {
-        //Display Won HUD
+        Player.transform.Find("GameWon").GetComponent<MGTextHUD>().EnableText();
         //Add buff to player
         ExitRoom(RoomID, Player);
     }

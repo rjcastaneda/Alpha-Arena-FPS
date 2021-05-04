@@ -24,7 +24,7 @@ public class Obelisk : MonoBehaviourPunCallbacks
         ready = false;
         int Room = miniGameManager.FindAvailableRoom();
         if(Room != -1){
-            miniGameManager.EnterRoom(Room, Player);
+        miniGameManager.EnterRoom(Room, Player);
         }
         
     }

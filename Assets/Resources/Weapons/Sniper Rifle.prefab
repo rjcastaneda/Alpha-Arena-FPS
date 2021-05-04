@@ -324,5 +324,6 @@ MonoBehaviour:
   reloadTime: 3
   reloadTimeEmpty: 4
   primaryFireSound: {fileID: 8300000, guid: 9dde91a2ac2fe6b4e978cdeb622d248b, type: 3}
-  alternateFireSound: {fileID: 0}
+  reloadSound: {fileID: 8300000, guid: b5a2ee33d0808d842a5d52c09b9b9d00, type: 3}
+  emptyReloadSound: {fileID: 8300000, guid: 9a4ccd02d95593245af54679adca21cb, type: 3}
   offsetVector: {x: 0, y: -0.3, z: -0.4}

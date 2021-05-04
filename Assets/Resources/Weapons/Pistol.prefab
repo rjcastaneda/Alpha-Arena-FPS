@@ -230,10 +230,11 @@ MonoBehaviour:
   currentReserveAmmo: 8
   maxReserveAmmo: 8
   infiniteReserveAmmo: 1
-  reloadTime: 1
-  reloadTimeEmpty: 2
+  reloadTime: 0.7
+  reloadTimeEmpty: 1.1
   primaryFireSound: {fileID: 8300000, guid: 00b5fb7a6354609459474cb392c448ff, type: 3}
-  alternateFireSound: {fileID: 0}
+  reloadSound: {fileID: 8300000, guid: d981233bcb0bc5f439509c0f92a6bd77, type: 3}
+  emptyReloadSound: {fileID: 8300000, guid: 9fb92c00bfb59be4688b88b301f17b65, type: 3}
   offsetVector: {x: 0, y: 0, z: 0}
 --- !u!1 &9172433296889184062
 GameObject:

@@ -255,13 +255,16 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             if ( (cw.currentAmmo != cw.magSize) && (cw.currentReserveAmmo != 0) && (reloadCoroutine == null) )
             {
                 Debug.Log("Starting reload for " + cw.weaponName);
+                inventory[itemIndex].GetComponent<AudioSource>().Stop();
                 if (cw.currentAmmo == 0)
                 {
-                    reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTimeEmpty)); //Normal reload
+                    reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTimeEmpty)); //Empty reload
+                    inventory[itemIndex].GetComponent<AudioSource>().PlayOneShot(cw.emptyReloadSound, 0.5f);
                 }
                 else
                 {
-                    reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTime));  //Empty reload
+                    reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTime));  //Normal reload
+                    inventory[itemIndex].GetComponent<AudioSource>().PlayOneShot(cw.reloadSound, 0.5f);
                 }
                 Vector3 lower = new Vector3(inventoryObject.transform.localPosition.x, inventoryObject.transform.localPosition.y - 5, inventoryObject.transform.localPosition.z);
                 lerpCoroutine = StartCoroutine(TransformWithLerp(inventoryObject.transform.localPosition, lower, 0.7f));
@@ -275,8 +278,13 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         {
             StopCoroutine(reloadCoroutine);
             reloadCoroutine = null; //We use this to track if the player is reloading or not
+        }
+        if (lerpCoroutine != null)
+        {
+            StopCoroutine(lerpCoroutine);
             lerpCoroutine = null;
             inventoryObject.transform.localPosition = inventoryObjectPos;
+            inventory[itemIndex].GetComponent<AudioSource>().Stop();
         }
     }
 

@@ -323,7 +323,8 @@ MonoBehaviour:
   maxReserveAmmo: 90
   infiniteReserveAmmo: 0
   reloadTime: 2
-  reloadTimeEmpty: 3
+  reloadTimeEmpty: 2.5
   primaryFireSound: {fileID: 8300000, guid: 589e4f0dbd9027a4d8c611540658f309, type: 3}
-  alternateFireSound: {fileID: 0}
+  reloadSound: {fileID: 8300000, guid: fc4e34153d5911f4eb19aae09b398b08, type: 3}
+  emptyReloadSound: {fileID: 8300000, guid: 82d0f2543994d6f4c97493bcd18e691e, type: 3}
   offsetVector: {x: 0, y: -0.2, z: 0}

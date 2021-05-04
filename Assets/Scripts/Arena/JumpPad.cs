@@ -5,7 +5,7 @@ using UnityEngine;
 public class JumpPad : MonoBehaviour
 {
     private Player_Movement PlayerTouched;
-    private float JumpForce = 100f;
+    private float JumpForce = 120f;
 
     private void OnTriggerEnter(Collider other)
     {

@@ -307,13 +307,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
                     {
                         hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
                         gunHUD.ShowHitmarker();
-                    }
-                    
-                    //DEBUGGING!!!
-                    lr.enabled = true;
-                    lr.SetPosition(0, ray.origin - new Vector3(0, 0.5f, 0));
-                    lr.SetPosition(1, hit.point);
-                    //DEBUGGING!!!
+                    }  
                 }
 
                 cw.currentAmmo -= 1;

@@ -30,6 +30,9 @@ public class MainMenu : MonoBehaviour
 
         //Set Defaults
         HowToPlayCanvas.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     //Exit button functions

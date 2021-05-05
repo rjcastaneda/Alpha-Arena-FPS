@@ -11,8 +11,7 @@ public class PlayerHud : MonoBehaviour
    
     void Start()
     {
-        timerIsRunning = true;
-        
+        timerIsRunning = true;       
     }
 
     // Update is called once per frame

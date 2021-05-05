@@ -300,7 +300,6 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
                     hit.collider.gameObject.GetComponent<Boid>()?.die();
-                    hit.collider.gameObject.GetComponent<PhotonPlayer>()?.TakeDamage(cw.damage);
 
                     //Check so you can't shoot yourself
                     if (hit.collider.gameObject.GetComponent<PhotonView>() && !hit.collider.gameObject.GetComponent<PhotonView>().IsMine)

@@ -34213,7 +34213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 1464172191}
-  timeRemaining: 120
+  timeRemaining: 90
   timerIsRunning: 0
 --- !u!114 &1464172191
 MonoBehaviour:

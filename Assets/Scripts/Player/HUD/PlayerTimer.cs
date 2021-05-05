@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHud : MonoBehaviour
+public class PlayerTimer
+    : MonoBehaviour
 {
     public Text timeText;
     public float timeRemaining = 90;

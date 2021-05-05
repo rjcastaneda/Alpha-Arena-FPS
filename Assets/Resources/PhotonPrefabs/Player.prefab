@@ -320,7 +320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2108983155433888844}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.247, y: -0.423, z: 0}
+  m_LocalPosition: {x: 0.35, y: -0.56, z: 1.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5608244588167108647}
@@ -760,7 +760,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 3.5
+  m_Height: 4.5
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!143 &5608244587681668923
@@ -918,8 +918,7 @@ MonoBehaviour:
   AutoSwapNewWeapon: 0
   StartingWeaponPrimary: {fileID: 8838719675263001572, guid: b4df0faa998d2494ca97b3b9223ee9fb,
     type: 3}
-  StartingWeaponSecondary: {fileID: 7731280652850974693, guid: 02c5120e557fe964f9ef5e92f550a340,
-    type: 3}
+  StartingWeaponSecondary: {fileID: 0}
   inventoryObject: {fileID: 2108983155433888844}
   inventory: []
   Camera: {fileID: 5608244588167108645}
@@ -953,6 +952,8 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
 --- !u!1 &3877158995854201898
 GameObject:
   m_ObjectHideFlags: 0

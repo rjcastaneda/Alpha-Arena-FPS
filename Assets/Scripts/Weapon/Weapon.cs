@@ -41,6 +41,16 @@ public class Weapon : MonoBehaviour
     [Tooltip("Sound used for the primary attack.")]
     public AudioClip primaryFireSound;
 
-    [Tooltip("Sound used for the alternate attack.")]
-    public AudioClip alternateFireSound;
+    [Tooltip("Sound used when reloading.")]
+    public AudioClip reloadSound;
+
+    [Tooltip("Sound used when reloading while empty.")]
+    public AudioClip emptyReloadSound;
+
+    [Header("Weapon Offset")]
+    [Tooltip("Position of the weapon viewmodel relative to the camera.")]
+    public Vector3 offsetVector;
+
+    [Tooltip("Used for tracking rate of fire. Do not touch!")]
+    public float nextFire;
 }

@@ -20,18 +20,20 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
     [Tooltip("The game object/point that weapons attach to.")]
     [SerializeField] private GameObject inventoryObject;
+    private Vector3 inventoryObjectPos;
 
     [SerializeField] private List<GameObject> inventory = new List<GameObject>();
+
 
     [SerializeField] private Camera Camera; //TODO: some sort of global class that handles basic things like the camera?
 
     private int itemIndex;
     private int previousItemIndex = -1;
 
-    private float nextFire = 0f;
     private float reloadTime;
 
     private Coroutine reloadCoroutine = null;
+    private Coroutine lerpCoroutine;
 
     private PhotonPlayer photonPlayer;
 
@@ -62,6 +64,7 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             Debug.LogError("No primary or secondary starting weapon specified!");
 
         gunHUD = transform.Find("PlayerHUD").transform.Find("GunHUD").GetComponent<GunHUD>();
+        inventoryObjectPos = inventoryObject.transform.localPosition;
 
         //debugging
         lr = gameObject.AddComponent<LineRenderer>();
@@ -135,9 +138,25 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             Destroy(obj);
             return;
         }
-        obj.transform.SetParent(inventoryObject.transform);
-        obj.transform.localPosition = Vector3.zero;
+        obj.transform.SetParent(inventoryObject.transform); //Parent the weapon to our inventory object
+        obj.transform.localPosition = obj.GetComponent<Weapon>().offsetVector;  //Offset the viewmodel accordingly
         obj.transform.rotation = inventoryObject.transform.rotation;
+
+        //Disable shadow casting for first person weapons
+        if (obj.transform.Find("Object"))
+        {
+            obj.transform.Find("Object").GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;   
+        }
+        else
+            Debug.Log(obj + " does not have a child named Object!");
+
+        //Enable viewmodel arms for first person
+        if (obj.transform.Find("Viewmodel"))
+        {
+            obj.transform.Find("Viewmodel").gameObject.SetActive(true);
+        }
+        else
+            Debug.Log(obj + " does not have child named Viewmodel!");
 
         inventory.Add(obj);
 
@@ -221,10 +240,6 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         {
             PrimaryFire();
         }
-        else if (Input.GetMouseButton(1))
-        {
-            AltFire();
-        }
     }
 
     void CheckReloadWeapon()
@@ -236,12 +251,19 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             if ( (cw.currentAmmo != cw.magSize) && (cw.currentReserveAmmo != 0) && (reloadCoroutine == null) )
             {
                 Debug.Log("Starting reload for " + cw.weaponName);
+                inventory[itemIndex].GetComponent<AudioSource>().Stop();
                 if (cw.currentAmmo == 0)
                 {
-                    reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTimeEmpty)); //Normal reload
+                    reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTimeEmpty)); //Empty reload
+                    inventory[itemIndex].GetComponent<AudioSource>().PlayOneShot(cw.emptyReloadSound, 0.5f);
                 }
                 else
-                reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTime));  //Empty reload
+                {
+                    reloadCoroutine = StartCoroutine(ReloadWeapon(cw.reloadTime));  //Normal reload
+                    inventory[itemIndex].GetComponent<AudioSource>().PlayOneShot(cw.reloadSound, 0.5f);
+                }
+                Vector3 lower = new Vector3(inventoryObject.transform.localPosition.x, inventoryObject.transform.localPosition.y - 5, inventoryObject.transform.localPosition.z);
+                lerpCoroutine = StartCoroutine(TransformWithLerp(inventoryObject.transform.localPosition, lower, 0.7f));
             }
         }
     }
@@ -253,6 +275,13 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
             StopCoroutine(reloadCoroutine);
             reloadCoroutine = null; //We use this to track if the player is reloading or not
         }
+        if (lerpCoroutine != null)
+        {
+            StopCoroutine(lerpCoroutine);
+            lerpCoroutine = null;
+            inventoryObject.transform.localPosition = inventoryObjectPos;
+            inventory[itemIndex].GetComponent<AudioSource>().Stop();
+        }
     }
 
     void PrimaryFire()
@@ -260,10 +289,10 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         Weapon cw = inventory[itemIndex].GetComponent<Weapon>();
         if (cw.currentAmmo > 0)
         {
-            if (Time.time > nextFire)
+            if (Time.time > cw.nextFire)
             {
-                nextFire = Time.time;
-                nextFire += cw.rateOfFire;
+                cw.nextFire = Time.time;
+                cw.nextFire += cw.rateOfFire;
 
                 Ray ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
                 ray.origin = Camera.transform.position;
@@ -287,14 +316,13 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
                 cw.currentAmmo -= 1;
 
                 inventory[itemIndex].GetComponent<AudioSource>().PlayOneShot(cw.primaryFireSound, 0.5f);
+                Vector3 recoil = new Vector3(inventoryObject.transform.localPosition.x, inventoryObject.transform.localPosition.y - 0.05f, inventoryObject.transform.localPosition.z - 0.2f);
+                lerpCoroutine = StartCoroutine(TransformWithLerp(recoil, inventoryObjectPos, 0.08f));
             }
         }
     }
 
-    void AltFire()
-    {
-
-    }
+    
 
     void Reload()
     {
@@ -302,26 +330,33 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         Debug.Log("Reloaded " + cw.weaponName);
         if (cw.currentAmmo != cw.magSize)
         {
-            if (cw.magSize > cw.currentReserveAmmo)
+            int addedAmmo = Mathf.Clamp(cw.currentReserveAmmo, 0, cw.magSize - cw.currentAmmo);
+            cw.currentAmmo += addedAmmo;
+            if (!cw.infiniteReserveAmmo)
             {
-                cw.currentAmmo = cw.currentReserveAmmo;
-                cw.currentReserveAmmo -= cw.currentReserveAmmo;
-            }
-            else
-            {
-                if (!cw.infiniteReserveAmmo)
-                {
-                    cw.currentReserveAmmo -= (cw.magSize - cw.currentAmmo);
-                }
-                cw.currentAmmo = cw.magSize;
+                cw.currentReserveAmmo -= addedAmmo;
             }
         }
         reloadCoroutine = null;
+        //lerpCoroutine = StartCoroutine(TransformWithLerp(inventoryObject.transform.localPosition, inventoryObjectPos, 0.3f));
+        //nextFire = Time.time + 0.3f;
+        inventoryObject.transform.localPosition = inventoryObjectPos;
     }
 
     IEnumerator ReloadWeapon(float time)
     {
         yield return new WaitForSeconds(time);
         Reload();
+    }
+
+    IEnumerator TransformWithLerp(Vector3 startPos, Vector3 endPos, float time)
+    {
+        float elapsed = 0f;
+        while (elapsed < time)
+        {
+            inventoryObject.transform.localPosition = Vector3.Lerp(startPos, endPos, (elapsed / time));
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
     }
 }

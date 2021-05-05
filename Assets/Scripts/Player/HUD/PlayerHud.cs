@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,7 @@ public class PlayerHud : MonoBehaviour
                 Debug.Log("Time has run out!");
                 timerIsRunning = false;
                 timeRemaining = 0;
+                Timeover();
             }
         }
     }
@@ -44,8 +46,9 @@ public class PlayerHud : MonoBehaviour
 
     }
 
-    void Gameover()
+    void Timeover()
     {
-        //load the score screen
+        PhotonNetwork.LoadLevel(0);
+        //load the Main menu screen
     }
 }

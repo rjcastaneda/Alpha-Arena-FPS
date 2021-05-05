@@ -6,8 +6,7 @@ using Photon.Pun;
 //Placed on the Game Manager object
 public class SpawnManager : MonoBehaviourPunCallbacks
 {
-    public int numSpawns;
-    private List<Spawner> spawnerList;
+    [SerializeField]private List<Spawner> spawnerList;
     private GameObject spawnerHolder;
 
     // Start is called before the first frame update

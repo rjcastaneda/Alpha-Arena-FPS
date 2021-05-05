@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using System;
 
 [RequireComponent(typeof(CharacterController))]
-public class Player_Movement : MonoBehaviour
+public class Player_Movement : MonoBehaviourPunCallbacks
 {
     // Class for applying different movement behaviors for ground, air, strafe
     [System.Serializable]
@@ -68,12 +70,18 @@ public class Player_Movement : MonoBehaviour
     private Vector3 crouchScale = new Vector3(1, 0.55f, 1);
     private Vector3 playerScale;
 
+    private PhotonView PV;
+
+    private Animator playerAnimator;
+
     private void Start()
     {
         // Initialize user
         PlayerTransform = transform;
+        //PV = GetComponent<PhotonView>();
         Player = GetComponent<CharacterController>();
         playerScale = transform.localScale;
+        playerAnimator = GetComponent<Animator>();
 
         if (!Camera)
         {
@@ -87,35 +95,38 @@ public class Player_Movement : MonoBehaviour
     private void Update()
     {
         // Update player states
-        MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        crouching = Input.GetButton("Crouch");
-        MouseLook.UpdateCursorLock();
-        QueueJump();
-
-        if (Player.isGrounded)
+        if (photonView.IsMine)
         {
-            GroundMove();
-        }
-        else
-        {
-            AirMove();
-        }
+            MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+            crouching = Input.GetButton("Crouch");
+            MouseLook.UpdateCursorLock();
+            QueueJump();
 
-        if (Input.GetButtonDown("Crouch"))
-        {
-            StartCrouch();
-        }
+            if (Player.isGrounded)
+            {
+                GroundMove();
+            }
+            else
+            {
+                AirMove();
+            }
 
-        if (Input.GetButtonUp("Crouch"))
-        {
-            StopCrouch();
-        }
+            if (Input.GetButtonDown("Crouch"))
+            {
+                StartCrouch();
+            }
 
-        var lastHeight = Player.height;
-        Player.height = Mathf.Lerp(Player.height, currentHeightValue, 20 * Time.deltaTime);
-        transform.position += new Vector3(0 , (Player.height - lastHeight) / 2, 0);
-        MouseLook.LookRotation(PlayerTransform, PlayerCamera);
-        Player.Move(PlayerVelocity * Time.deltaTime);
+            if (Input.GetButtonUp("Crouch"))
+            {
+                StopCrouch();
+            }
+
+            var lastHeight = Player.height;
+            Player.height = Mathf.Lerp(Player.height, currentHeightValue, 20 * Time.deltaTime);
+            transform.position += new Vector3(0, (Player.height - lastHeight) / 2, 0);
+            MouseLook.LookRotation(PlayerTransform, PlayerCamera);
+            Player.Move(PlayerVelocity * Time.deltaTime);
+        }
     }
 
     public Vector3 JumpPad(float force)
@@ -258,6 +269,8 @@ public class Player_Movement : MonoBehaviour
             PlayerVelocity.y = JumpForce;
             IsJumpQueued = false;
         }
+
+        playerAnimator.SetFloat("Speed", Math.Abs(PlayerVelocity.x + PlayerVelocity.z));
     }
 
     private void ApplyFriction(float mult)

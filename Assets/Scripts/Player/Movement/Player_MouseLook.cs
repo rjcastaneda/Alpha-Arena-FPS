@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Photon.Pun;
 
 [Serializable]
-public class Player_MouseLook
+public class Player_MouseLook : MonoBehaviourPunCallbacks
 {
     [SerializeField] private float XSensitivity = 2f;
     [SerializeField] private float YSensitivity = 2f;

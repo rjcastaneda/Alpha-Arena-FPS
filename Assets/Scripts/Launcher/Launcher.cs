@@ -19,6 +19,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] Transform playerListContent;
     [SerializeField] GameObject playerListPrefab;
     [SerializeField] GameObject startGameButton;
+    [SerializeField] TMP_InputField PlayerNameInputField;
+    [SerializeField] GameObject mapSelectPanel;
+    private int arenaNumber = 2;
 
     void Awake()
     {
@@ -33,16 +36,16 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Conneced to Master");
+        Debug.Log("Connected to Master");
         PhotonNetwork.JoinLobby();
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public override void OnJoinedLobby()
     {
-        MenuManager.Instance.OpenMenu("lobby");
+        MenuManager.Instance.OpenMenu("setname");
         Debug.Log("Joined Lobby");
-        PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
+        //PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
     }
 
     public void CreatRoom()
@@ -68,22 +71,24 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
 
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        mapSelectPanel.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        mapSelectPanel.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        errorText.text = "Error: Cannot Creat A Room. Error: " + message;
+        errorText.text = "Error: Cannot Create A Room. Error: " + message;
         MenuManager.Instance.OpenMenu("error");
     }
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel(2);
+        PhotonNetwork.LoadLevel(arenaNumber);
     }
 
     public void BackToMenu()
@@ -102,6 +107,13 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(info.Name);
         MenuManager.Instance.OpenMenu("loading");
 
+    }
+
+    public void GetPlayerName()
+    {
+        if (PlayerNameInputField.text == "") { return; }
+        PhotonNetwork.NickName = PlayerNameInputField.text;
+        MenuManager.Instance.OpenMenu("lobby");
     }
 
     public override void OnLeftRoom()
@@ -124,6 +136,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Instantiate(playerListPrefab, playerListContent).GetComponent<PlayerList>().Setup(newPlayer);
+    }
+
+    public void SetArenaNumber(int n)
+    {
+        arenaNumber = n;
     }
 }
 

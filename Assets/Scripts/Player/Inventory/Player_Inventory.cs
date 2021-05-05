@@ -30,7 +30,6 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
     private int itemIndex;
     private int previousItemIndex = -1;
 
-    private float nextFire = 0f;
     private float reloadTime;
 
     private Coroutine reloadCoroutine = null;
@@ -200,40 +199,37 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
 
     void CheckSwapWeapon()
     {
-        if (Time.time > nextFire)   //Disables weapon swapping if your current weapon isn't ready to fire
+        //Number keys
+        for (int i = 0; i < inventory.Count; i++)
         {
-            //Number keys
-            for (int i = 0; i < inventory.Count; i++)
+            if (Input.GetKeyDown((i + 1).ToString()))
             {
-                if (Input.GetKeyDown((i + 1).ToString()))
-                {
-                    EquipItem(i);
-                    break;
-                }
+                EquipItem(i);
+                break;
             }
+        }
 
-            //Scroll wheel weapon swapping
-            if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
+        //Scroll wheel weapon swapping
+        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
+        {
+            if (itemIndex >= inventory.Count - 1)
             {
-                if (itemIndex >= inventory.Count - 1)
-                {
-                    EquipItem(0);
-                }
-                else
-                {
-                    EquipItem(itemIndex + 1);
-                }
+                EquipItem(0);
             }
-            else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+            else
             {
-                if (itemIndex <= 0)
-                {
-                    EquipItem(inventory.Count - 1);
-                }
-                else
-                {
-                    EquipItem(itemIndex - 1);
-                }
+                EquipItem(itemIndex + 1);
+            }
+        }
+        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+        {
+            if (itemIndex <= 0)
+            {
+                EquipItem(inventory.Count - 1);
+            }
+            else
+            {
+                EquipItem(itemIndex - 1);
             }
         }
     }
@@ -293,10 +289,10 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         Weapon cw = inventory[itemIndex].GetComponent<Weapon>();
         if (cw.currentAmmo > 0)
         {
-            if (Time.time > nextFire)
+            if (Time.time > cw.nextFire)
             {
-                nextFire = Time.time;
-                nextFire += cw.rateOfFire;
+                cw.nextFire = Time.time;
+                cw.nextFire += cw.rateOfFire;
 
                 Ray ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
                 ray.origin = Camera.transform.position;
@@ -337,23 +333,17 @@ public class Player_Inventory : MonoBehaviourPunCallbacks
         Debug.Log("Reloaded " + cw.weaponName);
         if (cw.currentAmmo != cw.magSize)
         {
-            if (cw.magSize > cw.currentReserveAmmo)
+            int addedAmmo = Mathf.Clamp(cw.currentReserveAmmo, 0, cw.magSize - cw.currentAmmo);
+            cw.currentAmmo += addedAmmo;
+            if (!cw.infiniteReserveAmmo)
             {
-                cw.currentAmmo = cw.currentReserveAmmo;
-                cw.currentReserveAmmo -= cw.currentReserveAmmo;
-            }
-            else
-            {
-                if (!cw.infiniteReserveAmmo)
-                {
-                    cw.currentReserveAmmo -= (cw.magSize - cw.currentAmmo);
-                }
-                cw.currentAmmo = cw.magSize;
+                cw.currentReserveAmmo -= addedAmmo;
             }
         }
         reloadCoroutine = null;
-        lerpCoroutine = StartCoroutine(TransformWithLerp(inventoryObject.transform.localPosition, inventoryObjectPos, 0.3f));
-        nextFire = Time.time + 0.3f;
+        //lerpCoroutine = StartCoroutine(TransformWithLerp(inventoryObject.transform.localPosition, inventoryObjectPos, 0.3f));
+        //nextFire = Time.time + 0.3f;
+        inventoryObject.transform.localPosition = inventoryObjectPos;
     }
 
     IEnumerator ReloadWeapon(float time)

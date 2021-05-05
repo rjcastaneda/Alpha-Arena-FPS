@@ -9,7 +9,7 @@ public class Obelisk : MonoBehaviourPunCallbacks
     public float cooldown;
     public bool ready;
 
-    [SerializeField] private MiniGameManager miniGameManager;
+    private MiniGameManager miniGameManager;
 
     private void Start()
     {
@@ -18,13 +18,17 @@ public class Obelisk : MonoBehaviourPunCallbacks
         miniGameManager = GameObject.Find("GameManager").GetComponent<MiniGameManager>();
     }
 
-    public void enterRoom(GameObject Player)
+    public void EnterRoom(GameObject Player)
     {
-        cooldown = timeDelay;
-        ready = false;
         int Room = miniGameManager.FindAvailableRoom();
-        if(Room != -1){
-        miniGameManager.EnterRoom(Room, Player);
+        if(Room != -1)
+        {
+            cooldown = timeDelay;
+            ready = false;
+            MiniGameIndicator MGOther = Player.gameObject.GetComponent<MiniGameIndicator>();
+            MGOther.enabled = false;
+            MGOther.crntObelisk = null;
+            miniGameManager.EnterRoom(Room, Player);
         }
         
     }
@@ -50,8 +54,9 @@ public class Obelisk : MonoBehaviourPunCallbacks
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
-        {   
-            if(ready){
+        {
+            PhotonView PV = other.gameObject.GetComponent<PhotonView>();
+            if(ready && PV.IsMine){
                MiniGameIndicator MGOther = other.gameObject.GetComponent<MiniGameIndicator>();
                MGOther.enabled = true;
                MGOther.crntObelisk = this;
@@ -61,7 +66,8 @@ public class Obelisk : MonoBehaviourPunCallbacks
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
+        PhotonView PV = other.gameObject.GetComponent<PhotonView>();
+        if (other.tag == "Player" && PV.IsMine)
         {
             MiniGameIndicator MGOther = other.gameObject.GetComponent<MiniGameIndicator>();
             MGOther.enabled = false;

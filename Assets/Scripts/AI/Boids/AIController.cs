@@ -29,20 +29,20 @@ public class AIController : MonoBehaviourPunCallbacks
     public float attractPush = 2f;
     public float attractPushDist = 1f;
 
+    [Header("Objects")]
+    [SerializeField ]private Attractor attractor;
+    [SerializeField] private BoidsMinigameManager boidsMiniGameManager;
 
-    private void Awake()
+    //Insantiate boids then disable
+    private void Start()
     {
         boids = new List<Boid>();
+        boidPool = new List<GameObject>();
         numSpawned = 0;
         InstantiateBoid();
     }
 
-    public override void OnEnable()
-    {
-        base.OnEnable();
-        RenableBoids();
-    }
-
+    [PunRPC]
     public void RenableBoids()
     {
         foreach (Boid boid in boids)
@@ -56,22 +56,42 @@ public class AIController : MonoBehaviourPunCallbacks
             boid.transform.rotation = transform.rotation;
             boid.SetActive(true);
         }
-        
-        
+    }
+
+    [PunRPC]
+    public void DisabledBoids()
+    {
+        foreach (Boid boid in boids)
+        {
+            boid.enabled = false;
+        }
+
+        foreach (GameObject boid in boidPool)
+        {
+            boid.transform.position = transform.position;
+            boid.transform.rotation = transform.rotation;
+            boid.SetActive(false);
+        }
     }
 
     //Function to spawn boids into the scene.
+    [PunRPC]
     public void InstantiateBoid()
     {
-        GameObject boidGO = PhotonNetwork.InstantiateRoomObject(Path.Combine("Prefabs","Boid"), transform.position, transform.rotation);
-        Boid boid = boidGO.GetComponent<Boid>();
-        boid.transform.SetParent(boidAnchor);
-        boids.Add(boid);
-        boidGO.SetActive(false);
-        numSpawned++;
         while(numSpawned < numBoids)
         {
-            Invoke("InstantiateBoid", spawnDelay);
+            GameObject boidGO = Instantiate(boidPreFab, transform.position, transform.rotation);
+            Boid boid = boidGO.GetComponent<Boid>();
+            boid.transform.SetParent(boidAnchor);
+            boid.parent = boidAnchor;
+            boid.AICont = this;
+            boid.attractor = attractor;
+            boid.boidsMiniGameManager = boidsMiniGameManager;
+            boidGO.GetComponent<Neighborhood>().AICont = this;
+            boids.Add(boid);
+            boidPool.Add(boidGO);
+            boidGO.SetActive(false);
+            numSpawned++;
         }
     }
 }

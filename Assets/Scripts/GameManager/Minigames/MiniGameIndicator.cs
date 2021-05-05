@@ -10,6 +10,7 @@ public class MiniGameIndicator : MonoBehaviourPun
 {
     public Obelisk crntObelisk;
     private GameObject MGIndicator;
+    private PhotonView PV;
 
     private void OnEnable()
     {
@@ -24,13 +25,17 @@ public class MiniGameIndicator : MonoBehaviourPun
     private void Awake()
     {
         MGIndicator = transform.Find("PlayerHUD").transform.Find("MGIndicator").gameObject;
+        PV = gameObject.GetComponent<PhotonView>();
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.E))
         {
-            crntObelisk.enterRoom(this.gameObject);
+            if(PV.IsMine)
+            {
+                crntObelisk.EnterRoom(this.gameObject);
+            }
         }
     }
 }

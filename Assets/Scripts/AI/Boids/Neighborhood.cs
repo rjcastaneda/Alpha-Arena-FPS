@@ -1,22 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Neighborhood : MonoBehaviour
+public class Neighborhood : MonoBehaviourPun
 {
     public List<Boid> neighbors;
     private SphereCollider coll;
-    private AIController AICont;
+    public AIController AICont;
 
+    [PunRPC]
     // Start is called before the first frame update
     void Start()
     {
-        AICont = transform.parent.GetComponent<AIController>();
         neighbors = new List<Boid>();
         coll = GetComponent<SphereCollider>();
         coll.radius = AICont.neighborDist;
     }
 
+    [PunRPC]
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -25,6 +27,7 @@ public class Neighborhood : MonoBehaviour
         }
     }
 
+    [PunRPC]
     private void OnTriggerEnter(Collider other)
     {
         Boid b = other.GetComponent<Boid>();
@@ -36,6 +39,7 @@ public class Neighborhood : MonoBehaviour
         }
     }
 
+    [PunRPC]
     private void OnTriggerExit(Collider other)
     {
         Boid b = other.GetComponent<Boid>();
@@ -47,6 +51,7 @@ public class Neighborhood : MonoBehaviour
         }
     }
 
+    [PunRPC]
     public Vector3 AvgPosition()
     {
         Vector3 avg = Vector3.zero;
@@ -60,6 +65,7 @@ public class Neighborhood : MonoBehaviour
         return avg;
     }
 
+    [PunRPC]
     public Vector3 AvgVel()
     {
         Vector3 avg = Vector3.zero;
@@ -73,6 +79,7 @@ public class Neighborhood : MonoBehaviour
         return avg;
     }
 
+    [PunRPC]
     public Vector3 AvgClosePos()
     {
         Vector3 avg = Vector3.zero;

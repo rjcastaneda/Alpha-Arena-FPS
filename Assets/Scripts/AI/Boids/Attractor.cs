@@ -1,23 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Attractor : MonoBehaviour
+public class Attractor : MonoBehaviourPun
 {
-    public Vector3 position = Vector3.zero;
+    public Vector3 position;
 
     [Header("Attractor Values")]
     public float radius = 50; //The bounds the attractor can be positioned at
     public float leadSpd = 100;
 
     private SphereCollider attractCol;
-    private AIController AICont;
+    [SerializeField]private AIController AICont;
 
     private void Start()
     {
         attractCol = this.gameObject.GetComponent<SphereCollider>();
         AICont = transform.parent.transform.Find("BoidController").GetComponent<AIController>();
-        this.gameObject.transform.position = position;
+        position = this.gameObject.transform.position;
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -26,6 +27,7 @@ public class Attractor : MonoBehaviour
         rndLocation();
     }
 
+    [PunRPC]
     //Function for the attractor to change to a random position
     public void rndLocation()
     {

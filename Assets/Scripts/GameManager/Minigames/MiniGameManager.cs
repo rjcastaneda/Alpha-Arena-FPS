@@ -39,13 +39,22 @@ public class MiniGameManager : MonoBehaviourPunCallbacks
         }
 
         Transform spawnpoint = MGRooms[idx].transform.Find("PlayerSpawn").transform;
+        Debug.Log(spawnpoint.position);
+
+        //Move player position
+        CharacterController CC = Player.GetComponent<CharacterController>();
+        CC.enabled = false;
         Player.transform.position = spawnpoint.position;
+        CC.enabled = true;
+
         MGRoomScript[idx].isOccupied = true;
+        MGRoomScript[idx].StartMiniGame(Player);
     }
 
     public void ExitRoom(int RoomID, GameObject Player)
     {
         Transform spawn = spawnManager.GetSpawnPoint();
+        Debug.Log(spawn.position);
 
         //Exit MiniGameRoom
         for (int x = 0; x < MGRoomScript.Count; x++)
@@ -57,19 +66,23 @@ public class MiniGameManager : MonoBehaviourPunCallbacks
             }
         }
 
+        //Move player position
+        CharacterController CC = Player.GetComponent<CharacterController>();
+        CC.enabled = false;
         Player.transform.position = spawn.position;
+        CC.enabled = true;
     }
 
     public void FailedGame(int RoomID, GameObject Player)
     {
-        Player.transform.Find("GameFailed").GetComponent<MGTextHUD>().EnableText();
+        Player.transform.Find("PlayerHUD").transform.Find("GameFailed").GetComponent<MGTextHUD>().EnableText();
         ExitRoom(RoomID, Player);
     }
 
     public void WonGame(int RoomID, GameObject Player)
     {
-        Player.transform.Find("GameWon").GetComponent<MGTextHUD>().EnableText();
-        //Add buff to player
+        Player.transform.Find("PlayerHUD").transform.Find("GameWon").GetComponent<MGTextHUD>().EnableText();
+        Player.GetComponent<PlayerData>().health = 125;
         ExitRoom(RoomID, Player);
     }
 

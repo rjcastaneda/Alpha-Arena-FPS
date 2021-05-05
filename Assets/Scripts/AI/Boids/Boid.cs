@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Boid : MonoBehaviour
+public class Boid : MonoBehaviourPun
 {
     [Header("Boid Velocity Vars")]
     public Rigidbody boidRB;
@@ -22,24 +23,20 @@ public class Boid : MonoBehaviour
     public bool attracted;
     public string leader;
 
-    private AIController AICont;
-    private Attractor attractor;
-    private Neighborhood NBHD;
-    private BoidsMinigameManager boidsMiniGameManager;
+    public Transform parent;
+    
+    public AIController AICont;
+    public Attractor attractor;
+    public Neighborhood NBHD;
+    public BoidsMinigameManager boidsMiniGameManager;
 
     private void Awake()
     {
         boidRB = this.gameObject.GetComponent<Rigidbody>();
-        AICont = transform.parent.GetComponent<AIController>();
-        attractor = transform.parent.parent.Find("BoidAttractor").GetComponent<Attractor>();
-        boidsMiniGameManager = transform.parent.parent.GetComponent<BoidsMinigameManager>();
         NBHD = this.gameObject.GetComponent<Neighborhood>();
-        boidPos = Random.onUnitSphere * AICont.spawnRadius;
-        velocity = Random.onUnitSphere * AICont.spawnRadius;
-        boidRB.velocity = velocity;
-        LookAhead();
     }
 
+    [PunRPC]
     private void OnEnable()
     {
         boidPos = Random.onUnitSphere * AICont.spawnRadius;
@@ -48,6 +45,7 @@ public class Boid : MonoBehaviour
         LookAhead();
     }
 
+    [PunRPC]
     private void FixedUpdate()
     {
         velocity = boidRB.velocity;
@@ -92,6 +90,7 @@ public class Boid : MonoBehaviour
         LookAhead();
     }
 
+    [PunRPC]
     //Function for Collision Avoidance Calculations
     void CalcAvoidance()
     {
@@ -106,6 +105,7 @@ public class Boid : MonoBehaviour
         }
     }
 
+    [PunRPC]
     //Function for Velocity Matching Calculations
     void CalcVelMatch()
     {
@@ -118,6 +118,7 @@ public class Boid : MonoBehaviour
         }
     }
 
+    [PunRPC]
     //Function for Boid Centering Calculations
     void CalcCentering()
     {
@@ -131,6 +132,7 @@ public class Boid : MonoBehaviour
         }
     }
 
+    [PunRPC]
     //function for Attraction Calculations
     void CalcAttraction()
     {
@@ -140,14 +142,16 @@ public class Boid : MonoBehaviour
         velAttract = delta.normalized * AICont.velocity;
     }
 
+    [PunRPC]
     //Function for boid to look at direction of their velocity.
     void LookAhead(){
         transform.LookAt(boidPos + boidRB.velocity);
     }
 
+    [PunRPC]
     public void die()
     {
-        //Call
+        boidsMiniGameManager.AddToScore();
         this.gameObject.SetActive(false);
         this.enabled = false;
     }

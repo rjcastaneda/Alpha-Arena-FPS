@@ -14,9 +14,9 @@ public class BoidMGHUD : MonoBehaviourPun
     public TextMeshProUGUI maxScore;
     public TextMeshProUGUI timeLeft;
 
-    void Start()
+    private void Update()
     {
-        boidHUD = transform.Find("PlayerHUD").transform.Find("BoidHUD").gameObject;
+        CheckText();
     }
 
     private void OnEnable()
@@ -32,7 +32,7 @@ public class BoidMGHUD : MonoBehaviourPun
     void CheckText()
     {
         crntScore.text = crntManager.score.ToString();
-        maxScore.text = crntManager.score.ToString();
-        timeLeft.text = crntManager.timer.ToString();
+        maxScore.text = crntManager.maxScore.ToString();
+        timeLeft.text = Mathf.RoundToInt(crntManager.timer).ToString();
     }
 }

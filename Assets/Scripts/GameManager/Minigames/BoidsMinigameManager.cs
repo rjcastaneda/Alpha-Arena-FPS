@@ -7,82 +7,91 @@ using Photon.Pun;
 public class BoidsMinigameManager : MonoBehaviourPunCallbacks
 {
     public float timer;
-    public float timeToSet;
+    public float timeToSet = 10f;
     public float score;
     public float maxScore;
-    public bool started;
+    public bool started = false;
 
-    private GameObject player;
-    private AIController boidAIController;
-    private MiniGameManager miniGameManager;
-    private MiniGameRoom thisRoom;
+    [SerializeField] private GameObject playerGO;
+    [SerializeField] private PhotonView playerPV;
+    [SerializeField] private AIController boidAIController;
+    [SerializeField] private MiniGameManager miniGameManager;
+    [SerializeField] private MiniGameRoom thisRoom;
         
-    private void Awake()
+    private void Start()
     {
         boidAIController = transform.Find("BoidController").GetComponent<AIController>();
-        miniGameManager = GameObject.Find("Game Manager").GetComponent<MiniGameManager>();
+        miniGameManager = GameObject.Find("GameManager").GetComponent<MiniGameManager>();
         thisRoom = gameObject.GetComponent<MiniGameRoom>();
-    }
-
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            BoidMGHUD boidHud = other.gameObject.GetComponent<BoidMGHUD>();
-            boidHud.enabled = false;
-            boidHud.crntManager = null;
-            player = null;
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "Player")
-        {
-            BoidMGHUD boidHud = other.gameObject.GetComponent<BoidMGHUD>();
-            boidHud.enabled = true;
-            boidHud.crntManager = this;
-            player = other.gameObject;
-        }
     }
 
     private void Update()
     {
-        CheckTimer();
-        CheckComplete();
+        if(started)
+        {
+            CheckTimer();
+            CheckComplete();
+        }
     }
 
     public void AddToScore()
     {
-        score++;
+        if(playerPV.IsMine)
+        {
+            score++;
+        }
     }
 
-    void StartMiniGame()
+    public void StartMiniGame(GameObject joinedPlayer)
     {
-        score = 0;
-        maxScore = boidAIController.numBoids;
-        timer = timeToSet;
-        started = true;
+        playerGO = joinedPlayer;
+        playerPV = playerGO.GetComponent<PhotonView>();
+        if(playerPV.IsMine)
+        {
+            BoidMGHUD boidHud = playerGO.GetComponent<BoidMGHUD>();
+            boidHud.enabled = true;
+            boidHud.crntManager = this;
+            boidAIController.RenableBoids();
+            score = 0;
+            maxScore = boidAIController.numBoids;
+            timer = timeToSet;
+            started = true;
+        }
     }
 
     //function to decrement the timer and to check if the player won or lost the minigame.
     void CheckTimer()
     {
         if(timer > 0 && started){
-            timer -= Time.fixedDeltaTime;
+            timer -= Time.deltaTime;
         }
 
         if(timer <= 0)
         {
             if(score == maxScore)
             {
-                miniGameManager.WonGame(thisRoom.ID, player);
+                if (playerPV.IsMine)
+                {
+                    boidAIController.DisabledBoids();
+                    BoidMGHUD boidHud = playerGO.GetComponent<BoidMGHUD>();
+                    boidHud.enabled = false;
+                    boidHud.crntManager = null;
+                    miniGameManager.WonGame(thisRoom.ID, playerGO);
+                }
+                
                 started = false;
             }
             else if(score != maxScore)
             {
-                miniGameManager.FailedGame(thisRoom.ID, player);
+                if (playerPV.IsMine)
+                {
+                    boidAIController.DisabledBoids();
+                    BoidMGHUD boidHud = playerGO.GetComponent<BoidMGHUD>();
+                    boidHud.enabled = false;
+                    boidHud.crntManager = null;
+                    miniGameManager.FailedGame(thisRoom.ID, playerGO);
+                }
+                
                 started = false;
             }
         }
@@ -92,7 +101,16 @@ public class BoidsMinigameManager : MonoBehaviourPunCallbacks
     void CheckComplete()
     {
         if(score == maxScore){
-            miniGameManager.WonGame(thisRoom.ID, player);
+            if (playerPV.IsMine)
+            {
+                boidAIController.enabled = false;
+                BoidMGHUD boidHud = playerGO.GetComponent<BoidMGHUD>();
+                boidHud.enabled = false;
+                boidHud.crntManager = null;
+                miniGameManager.WonGame(thisRoom.ID, playerGO);
+            }
+
+            started = false;
         }
     }
 

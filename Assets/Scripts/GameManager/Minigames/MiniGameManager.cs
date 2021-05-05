@@ -10,7 +10,6 @@ public class MiniGameManager : MonoBehaviourPunCallbacks
     [SerializeField]private List<MiniGameRoom> MGRoomScript;
     private Transform MGRoomContainer;
 
-    private BuffsManager buffsManager;
     private SpawnManager spawnManager;
 
     // Start is called before the first frame update
